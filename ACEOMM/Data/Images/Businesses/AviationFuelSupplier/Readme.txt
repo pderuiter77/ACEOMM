@@ -1,0 +1,1 @@
+﻿This folder will contain all av fuel supplier images

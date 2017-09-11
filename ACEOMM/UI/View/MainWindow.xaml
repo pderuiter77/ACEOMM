@@ -1,0 +1,337 @@
+﻿<Window x:Class="ACEOMM.UI.View.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:model="clr-namespace:ACEOMM.Domain.Model"
+        xmlns:modelB="clr-namespace:ACEOMM.Domain.Model.Businesses"
+        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+        xmlns:behaviors="clr-namespace:ACEOMM.UI.Behaviors"
+        Title="Airport CEO Mod Manager" Height="768" Width="1024" WindowStartupLocation="CenterScreen"
+        Closing="Window_Closing">
+    <DockPanel>
+        <Menu DockPanel.Dock="Top">
+            <MenuItem Header="File">
+                <MenuItem Header="{StaticResource SaveImage}" Command="{Binding SaveDataCommand}" />
+                <MenuItem Header="{StaticResource ImportImage}" Command="{Binding ImportDataCommand}" />
+                <Separator />
+                <MenuItem Header="{StaticResource ExitImage}" Command="{Binding ExitCommand}" />
+            </MenuItem>
+        </Menu>
+        <ToolBarTray DockPanel.Dock="Top">
+            <ToolBar>
+                <Button Content="{StaticResource AddModImage}" Command="{Binding AddModCommand}" ToolTip="Add a new mod" />
+                <Button Content="{StaticResource EditEntityImage}" Command="{Binding EditEntityCommand}" CommandParameter="{Binding CurrentTreeEntity}" ToolTip="Edit the current item in the tree" />
+                <Button Content="{StaticResource RemoveEntityImage}" Command="{Binding RemoveEntiyyCommand}" ToolTip="Remove the current item in the tree from its parent" />
+                <Button Content="{StaticResource InstallModImage}" Command="{Binding InstallMod}"  />
+                <Button Content="{StaticResource UninstallModImage}" Command="{Binding UninstallMod}"  />
+            </ToolBar>
+            <ToolBar>
+                <Button Content="{StaticResource AirlineImage}" Command="{Binding AddBusinessCommand}" CommandParameter="{x:Static model:BusinessType.Airline}" ToolTip="Add a new airline" />
+                <Button Content="{StaticResource AVFuelSupplierImage}" Command="{Binding AddBusinessCommand}" CommandParameter="{x:Static model:BusinessType.AviationFuelSupplier}" ToolTip="Add a new aviation fuel supplier" />
+                <Button Content="{StaticResource BankImage}" Command="{Binding AddBusinessCommand}" CommandParameter="{x:Static model:BusinessType.Bank}" ToolTip="Add a new bank" />
+                <Button Content="{StaticResource ContractorImage}" Command="{Binding AddBusinessCommand}" CommandParameter="{x:Static model:BusinessType.Contractor}" ToolTip="Add a new contractor" />
+                <Button Content="{StaticResource FranchiseImage}" Command="{Binding AddBusinessCommand}" CommandParameter="{x:Static model:BusinessType.Franchise}" ToolTip="Add a new franchise" />
+                <Button Content="{StaticResource EditBusinessImage}" Command="{Binding EditBusinessCommand}" ToolTip="Edit the current business selected in the grid" />
+                <Button Content="{StaticResource RemoveBusinessImage}" Command="{Binding RemoveBusinessCommand}" ToolTip="Remove the current business selected in the grid" />
+                <StackPanel Orientation="Horizontal" Visibility="Collapsed">
+                    <Label Content="Group by" />
+                    <ComboBox SelectedItem="{Binding SelectedGrouping}" IsSynchronizedWithCurrentItem="True" ItemsSource="{Binding AvailableGroupings}" />
+                </StackPanel>
+            </ToolBar>
+            <ToolBar>
+                <Button Content="{StaticResource AddProductImage}" Command="{Binding AddProductCommand}" ToolTip="Add a new product" />
+                <Button Content="{StaticResource EditProductImage}" Command="{Binding EditProductCommand}" ToolTip="Edit the current product" />
+                <Button Content="{StaticResource RemoveProductImage}" Command="{Binding RemoveProductCommand}" ToolTip="Remove the current product" />
+            </ToolBar>
+        </ToolBarTray>
+        <TreeView ItemsSource="{Binding Mods}" DockPanel.Dock="Left">
+            <i:Interaction.Behaviors>
+                <behaviors:BindableSelectedItemBehavior SelectedItem="{Binding CurrentTreeEntity, Mode=TwoWay}" ParentItem="{Binding ParentTreeEntity, Mode=OneWayToSource}" />
+            </i:Interaction.Behaviors>
+            <TreeView.ItemContainerStyle>
+                <Style TargetType="{x:Type TreeViewItem}" BasedOn="{StaticResource {x:Type TreeViewItem}}">
+                    <EventSetter Event="MouseDoubleClick" Handler="OnTreeViewMouseDoubleClick" />
+                </Style>
+            </TreeView.ItemContainerStyle>
+            <TreeView.Resources>
+                <DataTemplate DataType="{x:Type model:Business}">
+                    <Label Content="{Binding Name}" Background="Red" />
+                </DataTemplate>
+                <DataTemplate DataType="{x:Type modelB:Product}">
+                    <Label Content="{Binding Name}" />
+                </DataTemplate>
+                <DataTemplate DataType="{x:Type modelB:Airline}">
+                    <Label Content="{Binding Name}" Background="{StaticResource AirlineBrush}" />
+                </DataTemplate>
+                <DataTemplate DataType="{x:Type modelB:AviationFuelSupplier}">
+                    <Label Content="{Binding Name}" Background="{StaticResource AVFuelSupplierBrush}" />
+                </DataTemplate>
+                <DataTemplate DataType="{x:Type modelB:Bank}">
+                    <Label Content="{Binding Name}" Background="{StaticResource BankBrush}" />
+                </DataTemplate>
+                <DataTemplate DataType="{x:Type modelB:Contractor}">
+                    <Label Content="{Binding Name}" Background="{StaticResource ContractorBrush}" />
+                </DataTemplate>
+                <HierarchicalDataTemplate ItemsSource="{Binding Products}" DataType="{x:Type modelB:Franchise}">
+                    <Label Content="{Binding Name}" Background="{StaticResource FranchiseBrush}" />
+                </HierarchicalDataTemplate>
+                <HierarchicalDataTemplate ItemsSource="{Binding Businesses}" DataType="{x:Type model:Mod}">
+                    <Label Content="{Binding Name}" />
+                </HierarchicalDataTemplate>
+            </TreeView.Resources>
+        </TreeView>
+        <DataGrid ItemsSource="{Binding Products}" SelectedItem="{Binding CurrentProduct}" DockPanel.Dock="Right" AutoGenerateColumns="False" VirtualizingPanel.IsVirtualizingWhenGrouping="True"
+                      CanUserAddRows="False" CanUserDeleteRows="False" SelectionMode="Single" SelectionUnit="FullRow" CanUserSortColumns="True" IsSynchronizedWithCurrentItem="True"
+                      ScrollViewer.CanContentScroll="True" ScrollViewer.VerticalScrollBarVisibility="Auto" IsReadOnly="True">
+            <DataGrid.InputBindings>
+                <MouseBinding Gesture="LeftDoubleClick" Command="{Binding EditProductCommand}" />
+            </DataGrid.InputBindings>
+            <DataGrid.RowStyle>
+                <Style TargetType="DataGridRow">
+                    <Setter Property="Background" Value="{Binding Color, Converter={StaticResource ColorToBrushConverter}}">
+                    </Setter>
+                </Style>
+            </DataGrid.RowStyle>
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Name" Binding="{Binding Name}" />
+                <DataGridTextColumn Header="Type" Binding="{Binding Type}" />
+            </DataGrid.Columns>
+        </DataGrid>
+        <StatusBar DockPanel.Dock="Bottom">
+            <StatusBarItem>
+                <TextBlock Text="{Binding CurrentAction}" />
+            </StatusBarItem>
+            <StatusBarItem>
+                <ProgressBar Width="90" Height="16" Maximum="{Binding ProgressBarMaximum}" Value="{Binding ProgressBarCurrentValue}" />
+            </StatusBarItem>
+            <StatusBarItem>
+                <StackPanel Orientation="Horizontal">
+                    <Label Content="Businesses: " />
+                    <Label Content="{Binding Businesses.Count}" />
+                </StackPanel>
+                
+            </StatusBarItem>
+        </StatusBar>
+        <DataGrid ItemsSource="{Binding Businesses}" SelectedItem="{Binding CurrentBusiness}" AutoGenerateColumns="False" VirtualizingPanel.IsVirtualizingWhenGrouping="True"
+                      CanUserAddRows="False" CanUserDeleteRows="False" SelectionMode="Single" SelectionUnit="FullRow" CanUserSortColumns="True" IsSynchronizedWithCurrentItem="True"
+                      ScrollViewer.CanContentScroll="True" ScrollViewer.VerticalScrollBarVisibility="Auto" IsReadOnly="True">
+            <DataGrid.InputBindings>
+                <MouseBinding Gesture="LeftDoubleClick" Command="{Binding EditBusinessCommand}" />
+            </DataGrid.InputBindings>
+            <!-- <DataGrid.GroupStyle>
+                <GroupStyle>
+                    <GroupStyle.HeaderTemplate>
+                        <DataTemplate>
+                            <StackPanel>
+                                <TextBlock Text="{Binding Name}" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </GroupStyle.HeaderTemplate>
+                    <GroupStyle.ContainerStyle>
+                        <Style TargetType="{x:Type GroupItem}">
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="{x:Type GroupItem}">
+                                        <Expander>
+                                            <Expander.Header>
+                                                <StackPanel Orientation="Horizontal">
+                                                    <TextBlock Text="{Binding Path=Name}" />
+                                                    <TextBlock Text=" ("/>
+                                                    <TextBlock Text="{Binding Path=ItemCount}"/>
+                                                    <TextBlock Text=" Items )"/>
+                                                </StackPanel>
+                                            </Expander.Header>
+                                            <ItemsPresenter />
+                                        </Expander>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </GroupStyle.ContainerStyle>
+                </GroupStyle>
+            </DataGrid.GroupStyle> -->
+            <DataGrid.RowStyle>
+                <Style TargetType="DataGridRow">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding Type}" Value="{x:Static model:BusinessType.Airline}">
+                            <Setter Property="Background" Value="{StaticResource AirlineBrush}" />
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding Type}" Value="{x:Static model:BusinessType.AviationFuelSupplier}">
+                            <Setter Property="Background" Value="{StaticResource AVFuelSupplierBrush}" />
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding Type}" Value="{x:Static model:BusinessType.Bank}">
+                            <Setter Property="Background" Value="{StaticResource BankBrush}" />
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding Type}" Value="{x:Static model:BusinessType.Contractor}">
+                            <Setter Property="Background" Value="{StaticResource ContractorBrush}" />
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding Type}" Value="{x:Static model:BusinessType.Franchise}">
+                            <Setter Property="Background" Value="{StaticResource FranchiseBrush}" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </DataGrid.RowStyle>
+            <DataGrid.Columns>
+                <DataGridTemplateColumn SortMemberPath="Name">
+                    <DataGridTemplateColumn.HeaderStyle>
+                        <Style TargetType="{x:Type DataGridColumnHeader}">
+                            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                        </Style>
+                    </DataGridTemplateColumn.HeaderStyle>
+                    <DataGridTemplateColumn.HeaderTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Vertical">
+                                <TextBox Text="{Binding DataContext.NameFilter, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, RelativeSource={RelativeSource AncestorType={x:Type Window}}}" />
+                                <Label Content="Name" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.HeaderTemplate>
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Name}"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Width="100" SortMemberPath="Description">
+                    <DataGridTemplateColumn.HeaderStyle>
+                        <Style TargetType="{x:Type DataGridColumnHeader}">
+                            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                        </Style>
+                    </DataGridTemplateColumn.HeaderStyle>
+                    <DataGridTemplateColumn.HeaderTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Vertical">
+                                <TextBox Text="{Binding DataContext.DescriptionFilter, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, RelativeSource={RelativeSource AncestorType={x:Type Window}}}" />
+                                <Label Content="Description" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.HeaderTemplate>
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Description}"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn SortMemberPath="CEO">
+                    <DataGridTemplateColumn.HeaderStyle>
+                        <Style TargetType="{x:Type DataGridColumnHeader}">
+                            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                        </Style>
+                    </DataGridTemplateColumn.HeaderStyle>
+                    <DataGridTemplateColumn.HeaderTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Vertical">
+                                <TextBox Text="{Binding DataContext.CeoFilter, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, RelativeSource={RelativeSource AncestorType={x:Type Window}}}" />
+                                <Label Content="CEO" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.HeaderTemplate>
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding CEO}"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn SortMemberPath="Country.Name">
+                    <DataGridTemplateColumn.HeaderStyle>
+                        <Style TargetType="{x:Type DataGridColumnHeader}">
+                            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                        </Style>
+                    </DataGridTemplateColumn.HeaderStyle>
+                    <DataGridTemplateColumn.HeaderTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Vertical">
+                                <TextBox Text="{Binding DataContext.CountryFilter, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, RelativeSource={RelativeSource AncestorType={x:Type Window}}}" />
+                                <Label Content="Country" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.HeaderTemplate>
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Country.Name}"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn SortMemberPath="Author">
+                    <DataGridTemplateColumn.HeaderStyle>
+                        <Style TargetType="{x:Type DataGridColumnHeader}">
+                            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                        </Style>
+                    </DataGridTemplateColumn.HeaderStyle>
+                    <DataGridTemplateColumn.HeaderTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Vertical">
+                                <TextBox Text="{Binding DataContext.AuthorFilter, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, RelativeSource={RelativeSource AncestorType={x:Type Window}}}" />
+                                <Label Content="Author" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.HeaderTemplate>
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Author}"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn SortMemberPath="Version">
+                    <DataGridTemplateColumn.HeaderStyle>
+                        <Style TargetType="{x:Type DataGridColumnHeader}">
+                            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                        </Style>
+                    </DataGridTemplateColumn.HeaderStyle>
+                    <DataGridTemplateColumn.HeaderTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Vertical">
+                                <TextBox Text="{Binding DataContext.VersionFilter, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, RelativeSource={RelativeSource AncestorType={x:Type Window}}}" />
+                                <Label Content="Version" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.HeaderTemplate>
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Version}"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn SortMemberPath="Status">
+                    <DataGridTemplateColumn.HeaderStyle>
+                        <Style TargetType="{x:Type DataGridColumnHeader}">
+                            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                        </Style>
+                    </DataGridTemplateColumn.HeaderStyle>
+                    <DataGridTemplateColumn.HeaderTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Vertical">
+                                <TextBox Text="{Binding DataContext.StatusFilter, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, RelativeSource={RelativeSource AncestorType={x:Type Window}}}" />
+                                <Label Content="Status" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.HeaderTemplate>
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Status}"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn SortMemberPath="Type">
+                    <DataGridTemplateColumn.HeaderStyle>
+                        <Style TargetType="{x:Type DataGridColumnHeader}">
+                            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                        </Style>
+                    </DataGridTemplateColumn.HeaderStyle>
+                    <DataGridTemplateColumn.HeaderTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Vertical">
+                                <TextBox Text="{Binding DataContext.TypeFilter, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, RelativeSource={RelativeSource AncestorType={x:Type Window}}}" />
+                                <Label Content="Type" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.HeaderTemplate>
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Type}"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+    </DockPanel>
+</Window>
