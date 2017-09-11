@@ -247,11 +247,6 @@
     <None Include="Data\Datastore.xml" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Data\Backup\Readme.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Data\Export\Readme.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -332,6 +327,11 @@
     <Resource Include="Res\AddProduct.png" />
     <Resource Include="Res\EditProduct.png" />
     <Resource Include="Res\RemoveProduct.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Data\Backup\Readme.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
