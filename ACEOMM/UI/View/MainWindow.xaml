@@ -1,4 +1,4 @@
-﻿<Window x:Class="ACEOMM.UI.View.MainWindow"
+<Window x:Class="ACEOMM.UI.View.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:model="clr-namespace:ACEOMM.Domain.Model"
@@ -21,8 +21,9 @@
                 <Button Content="{StaticResource AddModImage}" Command="{Binding AddModCommand}" ToolTip="Add a new mod" />
                 <Button Content="{StaticResource EditEntityImage}" Command="{Binding EditEntityCommand}" CommandParameter="{Binding CurrentTreeEntity}" ToolTip="Edit the current item in the tree" />
                 <Button Content="{StaticResource RemoveEntityImage}" Command="{Binding RemoveEntiyyCommand}" ToolTip="Remove the current item in the tree from its parent" />
-                <Button Content="{StaticResource InstallModImage}" Command="{Binding InstallMod}"  />
-                <Button Content="{StaticResource UninstallModImage}" Command="{Binding UninstallMod}"  />
+                <Button Content="{StaticResource InstallModImage}" Command="{Binding InstallModCommand}"  />
+                <Button Content="{StaticResource UninstallModImage}" Command="{Binding UninstallModCommand}"  />
+                <Button Content="{StaticResource DownloadImage}" Command="{Binding DownloadImagesCommand}"  />
             </ToolBar>
             <ToolBar>
                 <Button Content="{StaticResource AirlineImage}" Command="{Binding AddBusinessCommand}" CommandParameter="{x:Static model:BusinessType.Airline}" ToolTip="Add a new airline" />
