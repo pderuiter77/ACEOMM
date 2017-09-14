@@ -1,4 +1,4 @@
-﻿<Application x:Class="ACEOMM.App"
+<Application x:Class="ACEOMM.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:converters="clr-namespace:ACEOMM.UI.Converters"
@@ -118,6 +118,7 @@
         <Image x:Key="RemoveEntityImage" Source="Res/RemoveBusiness.png" />
         <Image x:Key="SaveImage" Source="Res/Save.png" />
         <Image x:Key="ImportImage" Source="Res/Import.png" />
+        <Image x:Key="DownloadImage" Source="Res/Download.png" />
         <Image x:Key="ExitImage" Source="Res/Exit.png" />
         <Image x:Key="InstallModImage" Source="Res/InstallMod.png" />
         <Image x:Key="UninstallModImage" Source="Res/UninstallMod.png" />
