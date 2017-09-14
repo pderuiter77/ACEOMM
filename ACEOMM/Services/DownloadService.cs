@@ -1,9 +1,10 @@
-﻿using ACEOMM.Domain.Model;
+using ACEOMM.Domain.Model;
 using ACEOMM.Domain.Model.Businesses;
 using NLog;
 using System;
 using System.IO;
 using System.Net;
+using System.Threading.Tasks;
 
 namespace ACEOMM.Services
 {
@@ -31,21 +32,39 @@ namespace ACEOMM.Services
             }
             catch (Exception ex)
             {
-                logger.Error("Failed downloading logo : " + ex.Message);
-                throw;
+                logger.Error(ex.Message);
+                return ex.Message;
             }
         }
 
         public static string DownloadProductLogo(Product product, string path)
         {
+            if (string.IsNullOrWhiteSpace(product.Logo.RemoteUrl))
+                return string.Empty;
             product.Status = EntityStatus.Modified;
-            return Download(product.Logo, Path.Combine(path, "/Products/"), product.Name);
+            var result = Download(product.Logo, Path.Combine(path, @"Products\"), product.Name);
+            if (!string.IsNullOrWhiteSpace(result))
+            {
+                result = string.Format("Failed downloading logo for product '{0}' : {1}", product.Name, result);
+                logger.Error(result);
+                return result;
+            }
+            return string.Empty;
         }
 
         public static string DownloadBusinessLogo(Business business, string path)
         {
+            if (string.IsNullOrWhiteSpace(business.Logo.RemoteUrl))
+                return string.Empty;
             business.Status = EntityStatus.Modified;
-            return Download(business.Logo, Path.Combine(path, "Businesses/", business.GetType().Name), business.Name);
+            var result = Download(business.Logo, Path.Combine(path, @"Businesses\", business.GetType().Name), business.Name);
+            if (!string.IsNullOrWhiteSpace(result))
+            {
+                result = string.Format("Failed downloading logo for business '{0}' : {1}", business.Name, result);
+                logger.Error(result);
+                return result;
+            }
+            return string.Empty;
         }
     }
 }
