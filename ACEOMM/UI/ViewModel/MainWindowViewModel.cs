@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Data;
 using System.Windows.Input;
@@ -175,6 +176,7 @@ namespace ACEOMM.UI.ViewModel
             ProgressBarCurrentValue = current;
             CurrentAction = text;
             Dispatcher.CurrentDispatcher.Invoke(delegate { }, DispatcherPriority.Render);
+            
         }
         #endregion
 
@@ -489,7 +491,29 @@ namespace ACEOMM.UI.ViewModel
             InstallService.Uninstall(CurrentTreeEntity as Mod);
         }
 
-        private void DownloadImages()
+        private void DoDownload(List<Business> businessWorklist, List<Product> productWorklist, Action<int, int, string> updateCallback, Action<string> ErrorCallback)
+        {
+            var total = businessWorklist.Count + productWorklist.Count;
+            var counter = 0;
+            foreach (var business in businessWorklist)
+            {
+                counter++;
+                updateCallback(total, counter, string.Format("Downloading image for '{0}' [{1}/{2}]", business.Name, counter, total));
+                var result = DownloadService.DownloadBusinessLogo(business, @".\Data\Images\");
+                if (!string.IsNullOrWhiteSpace(result))
+                    ErrorCallback(result);
+            }
+            foreach (var product in productWorklist)
+            {
+                counter++;
+                updateCallback(total, counter, string.Format("Downloading image for '{0}' [{1}/{2}]", product.Name, counter, total));
+                var result = DownloadService.DownloadProductLogo(product, @".\Data\Images\");
+                if (!string.IsNullOrWhiteSpace(result))
+                    ErrorCallback(result);
+            }
+        }
+
+        private async void DownloadImages()
         { 
             var businessWorklist = new List<Business>();
             var productWorklist = new List<Product>();
@@ -527,24 +551,7 @@ namespace ACEOMM.UI.ViewModel
             }
             if (businessWorklist == null || productWorklist == null)
                 return;
-            var total = businessWorklist.Count + productWorklist.Count;
-            var counter = 0;
-            foreach (var business in businessWorklist)
-            {
-                counter++;
-                UpdateProgress(total, counter, string.Format("Downloading image for '{0}'", business.Name));
-                var result = DownloadService.DownloadBusinessLogo(business, @".\Data\Images\");
-                if (!string.IsNullOrWhiteSpace(result))
-                    View.ShowError(result);
-            }
-            foreach (var product in productWorklist)
-            {
-                counter++;
-                UpdateProgress(total, counter, string.Format("Downloading image for '{0}'", product.Name));
-                var result = DownloadService.DownloadProductLogo(product, @".\Data\Images\");
-                if (!string.IsNullOrWhiteSpace(result))
-                    View.ShowError(result);
-            }
+            await Task.Run(() => DoDownload(businessWorklist, productWorklist, UpdateProgress, View.ShowError));
         }
 
         #endregion

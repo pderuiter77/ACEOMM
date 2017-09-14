@@ -71,7 +71,7 @@ namespace ACEOMM.UI.View
 
         public void ShowError(string text)
         {
-            MessageBox.Show(text, App.Current.MainWindow.Title, MessageBoxButton.OK, MessageBoxImage.Error);
+            Dispatcher.Invoke(() => MessageBox.Show(text, App.Current.MainWindow.Title, MessageBoxButton.OK, MessageBoxImage.Error));
         }
 
         public bool AskYesNoConfirmation(string text)
