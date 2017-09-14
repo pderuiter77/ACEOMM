@@ -1,4 +1,4 @@
-﻿using ACEOMM.Domain.Model;
+using ACEOMM.Domain.Model;
 using ACEOMM.Domain.Model.Businesses;
 using ACEOMM.Services;
 using ACEOMM.UI.Commands;
@@ -10,6 +10,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Data;
 using System.Windows.Input;
+using System.Windows.Threading;
 
 namespace ACEOMM.UI.ViewModel
 {
@@ -173,6 +174,7 @@ namespace ACEOMM.UI.ViewModel
             ProgressBarMaximum = total;
             ProgressBarCurrentValue = current;
             CurrentAction = text;
+            Dispatcher.CurrentDispatcher.Invoke(delegate { }, DispatcherPriority.Render);
         }
         #endregion
 
@@ -205,11 +207,12 @@ namespace ACEOMM.UI.ViewModel
             AddModCommand = new RelayCommand(AddMod);
             EditEntityCommand = new RelayCommandOfT<Entity>(CanEditEntity, EditEntity);
             RemoveModCommand = new RelayCommand(CanRemoveEntity, RemoveEntity);
-            InstallMod = new RelayCommand(CanInstall, Install);
-            UninstallMod = new RelayCommand(CanUninstall, Uninstall);
+            InstallModCommand = new RelayCommand(CanInstall, Install);
+            UninstallModCommand = new RelayCommand(CanUninstall, Uninstall);
             AddProductCommand = new RelayCommand(AddProduct);
             EditProductCommand = new RelayCommand(CanEditProduct, EditProduct);
             RemoveProductCommand = new RelayCommand(CanRemoveProduct, RemoveProduct);
+            DownloadImagesCommand = new RelayCommand(DownloadImages);
         }
 
         public ICommand LoadDataCommand { get; set; }
@@ -222,8 +225,9 @@ namespace ACEOMM.UI.ViewModel
         public ICommand AddModCommand { get; set; }
         public ICommand<Entity> EditEntityCommand { get; set; }
         public ICommand RemoveModCommand { get; set; }
-        public ICommand InstallMod { get; set; }
-        public ICommand UninstallMod { get; set; }
+        public ICommand InstallModCommand { get; set; }
+        public ICommand UninstallModCommand { get; set; }
+        public ICommand DownloadImagesCommand { get; set; }
         public ICommand AddProductCommand { get; set; }
         public ICommand EditProductCommand { get; set; }
         public ICommand RemoveProductCommand { get; set; }
@@ -266,9 +270,10 @@ namespace ACEOMM.UI.ViewModel
         private async void ImportData()
         {
             var svc = new ImportService(_businesses, _products, _mods, _countries, UpdateProgress);
-            await svc.ImportProducts("Products.txt");
+            await svc.ImportProducts("ShopProducts.txt");
+            await svc.ImportProducts("RestaurantProducts.txt");
             await svc.ImportAirlines("Airlines.txt");
-            await svc.ImportAVFuelSuppliers("AVFuelSuppliers.txt");
+            await svc.ImportAVFuelSuppliers("AviationFuelSuppliers.txt");
             await svc.ImportBanks("Banks.txt");
             await svc.ImportContractors("Contractors.txt");
             await svc.ImportFranchises("Restaurants.txt");
@@ -482,6 +487,64 @@ namespace ACEOMM.UI.ViewModel
         private void Uninstall()
         {
             InstallService.Uninstall(CurrentTreeEntity as Mod);
+        }
+
+        private void DownloadImages()
+        { 
+            var businessWorklist = new List<Business>();
+            var productWorklist = new List<Product>();
+            if (CurrentTreeEntity is Mod)
+            {
+                var mod = (Mod)CurrentTreeEntity;
+                if (mod == Mod.UnknownMod)
+                    businessWorklist = _businesses;
+                else
+                    businessWorklist = mod.Businesses.ToList();
+            }
+            if (CurrentTreeEntity is Business)
+            {
+                var business = (Business)CurrentTreeEntity;
+                businessWorklist = new List<Business> { business };
+            }
+            if (CurrentTreeEntity is Product)
+            {
+                businessWorklist = new List<Business>();
+                var product = (Product)CurrentTreeEntity;
+                productWorklist = new List<Product> { product };
+            }
+            else
+            {
+                var franchises = businessWorklist.Where(x => x.Type == BusinessType.Franchise).Cast<Franchise>().ToList();
+                foreach(var franchise in franchises)
+                {
+                    foreach(var product in franchise.Products)
+                    {
+                        if (!productWorklist.Contains(product))
+                            productWorklist.Add(product);
+
+                    }
+                }
+            }
+            if (businessWorklist == null || productWorklist == null)
+                return;
+            var total = businessWorklist.Count + productWorklist.Count;
+            var counter = 0;
+            foreach (var business in businessWorklist)
+            {
+                counter++;
+                UpdateProgress(total, counter, string.Format("Downloading image for '{0}'", business.Name));
+                var result = DownloadService.DownloadBusinessLogo(business, @".\Data\Images\");
+                if (!string.IsNullOrWhiteSpace(result))
+                    View.ShowError(result);
+            }
+            foreach (var product in productWorklist)
+            {
+                counter++;
+                UpdateProgress(total, counter, string.Format("Downloading image for '{0}'", product.Name));
+                var result = DownloadService.DownloadProductLogo(product, @".\Data\Images\");
+                if (!string.IsNullOrWhiteSpace(result))
+                    View.ShowError(result);
+            }
         }
 
         #endregion
