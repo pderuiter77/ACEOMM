@@ -16,6 +16,6 @@ namespace ACEOMM.Services.Converter.CsvToDomain
         public static int ColorField = 1;
         public static int LogoField = 4;
         public static int PriceField = 3;
-        public static int TypeField = -1;
+        public static int TypeField = 6;
     }
 }

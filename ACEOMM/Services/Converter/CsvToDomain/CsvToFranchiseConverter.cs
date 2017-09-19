@@ -30,7 +30,8 @@ namespace ACEOMM.Services.Converter.CsvToDomain
             {
                 if (string.IsNullOrWhiteSpace(fields[i]))
                     continue;
-                var product = LookupProduct(fields[i]);
+                var useCategory = fields[i].Contains(" - ");
+                var product = LookupProduct(useCategory ? fields[i].Substring(fields[i].IndexOf(" - ") + 3) : fields[i]);
                 result.Add(product);
             }
             return result;

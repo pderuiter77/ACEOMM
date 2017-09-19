@@ -84,7 +84,7 @@ namespace ACEOMM.UI.Behaviors
             try
             {
                 var parent = VisualTreeHelper.GetParent(child as DependencyObject);
-                while ((parent as TreeViewItem) == null)
+                while ((parent as TreeViewItem) == null && parent != null)
                 {
                     parent = VisualTreeHelper.GetParent(parent);
                 }

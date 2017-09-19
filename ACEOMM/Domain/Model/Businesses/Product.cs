@@ -44,5 +44,10 @@ namespace ACEOMM.Domain.Model.Businesses
         private static Product _unknownProduct = new Product { Id = Guid.Empty, Name = "Unknown" };
 
         public static Product UnknownProduct { get { return _unknownProduct; } }
+
+        public override string ToString()
+        {
+            return Name;
+        }
     }
 }

@@ -164,7 +164,7 @@ namespace ACEOMM.Services
             CopyFile("Disclaimer.txt", @".\Data\", modPath);
         }
 
-        private static void InstallBusinesses(Mod mod, Dictionary<JsonBusiness, string> installedBusinesses)
+        private static void InstallBusinesses(Mod mod, Dictionary<JsonBusiness, string> installedBusinesses, bool useDefaults)
         {
             // Step 1 : Find or create mod folder
             var companiesInstallPath = InstallPath + CompaniesPath + mod.Name;
@@ -173,7 +173,7 @@ namespace ACEOMM.Services
             // Step 2 : Install businesses
             foreach (var business in mod.Businesses)
             {
-                var installedBusiness = installedBusinesses.FirstOrDefault(x => !x.Key.IsDefault && x.Key.name == business.Name && x.Key.Id != business.Id.ToString());
+                var installedBusiness = installedBusinesses.FirstOrDefault(x => (useDefaults || !x.Key.IsDefault) && x.Key.name == business.Name && x.Key.Id != business.Id.ToString());
                 if (installedBusiness.Key != null)
                 {
                     var msg = string.Format("Business '{0}' already installed ({1}), cannot install", business.Name, installedBusiness.Value);
@@ -214,7 +214,7 @@ namespace ACEOMM.Services
             File.WriteAllLines(Path.Combine(installPath, string.Format("ACEOMM {0}Products.mod", type.ToString())), products.Select(x => x.Id.ToString()).ToList());
         }
 
-        private static void InstallProducts(Mod mod, Dictionary<JsonProduct, string> installedProducts)
+        private static void InstallProducts(Mod mod, Dictionary<JsonProduct, string> installedProducts, bool useDefaults)
         {
             // Step 1: Find or create mod folder
             var productsInstallPath = InstallPath + ProductsPath + mod.Name;
@@ -227,6 +227,12 @@ namespace ACEOMM.Services
             {
                 foreach (var product in franchise.Products)
                 {
+                    if (product.Type == FranchiseType.Unknown)
+                    {
+                        var msg = string.Format("Product {0} has unknown type, cannot install", product.Name);
+                        logger.Error(msg);
+                        throw new System.Exception(msg);
+                    }
                     var toInstallProduct = totalproductList.FirstOrDefault(x => x.Key.Name == product.Name && x.Key.Type != product.Type);
                     if (toInstallProduct.Key != null)
                     {
@@ -247,10 +253,16 @@ namespace ACEOMM.Services
                 {
                     foreach (var product in franchise.Products)
                     {
-                        var installedProduct = installedProducts.FirstOrDefault(x => !x.Key.IsDefault && x.Key.productType == product.Name && x.Key.Id != product.Id.ToString());
+                        var installedProduct = installedProducts.FirstOrDefault(x => (useDefaults || !x.Key.IsDefault) && x.Key.productType == product.Name && x.Key.Id != product.Id.ToString());
                         if (installedProduct.Key != null)
                         {
                             var msg = string.Format("Product '{0}' already installed ({1}), cannot install", product.Name, installedProduct.Value);
+                            logger.Error(msg);
+                            throw new System.Exception(msg);
+                        }
+                        if (product.Type != franchise.FranchiseType)
+                        {
+                            var msg = string.Format("Product '{0}' has type {1}, but franchise has type {2}, cannot install", product.Name, product.Type, franchise.Type);
                             logger.Error(msg);
                             throw new System.Exception(msg);
                         }
@@ -360,6 +372,11 @@ namespace ACEOMM.Services
             return result;
         }
 
+        private static bool DefaultsFileValue(string filename)
+        {
+            return File.ReadAllText(filename) == "TRUE";
+        }
+
         public static void Install(Mod mod)
         {
             if (mod == null)
@@ -374,8 +391,11 @@ namespace ACEOMM.Services
             var installedBusinesses = GetInstalledBusinesses();
             logger.Info("Found {0} installed businesses", installedBusinesses.Count);
 
-            InstallBusinesses(mod, installedBusinesses);
-            InstallProducts(mod, installedProducts);
+            var businessesUseDefaults = DefaultsFileValue(InstallPath + CompaniesPath + "use_default.txt");
+            var productsUseDefaults = DefaultsFileValue(InstallPath + ProductsPath + "use_default.txt");
+
+            InstallBusinesses(mod, installedBusinesses, businessesUseDefaults);
+            InstallProducts(mod, installedProducts, productsUseDefaults);
             logger.Info("Installed {0} businesss", mod.Businesses.Count);
         }
 
@@ -388,6 +408,8 @@ namespace ACEOMM.Services
 
             var installedProducts = GetInstalledProducts();
             var installedBusinesses = GetInstalledBusinesses();
+
+            // TODO: Uninstall
 
             logger.Info("Uninstalled {0} businesss", mod.Businesses.Count);
         }
