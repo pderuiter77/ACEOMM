@@ -1,4 +1,4 @@
-﻿using ACEOMM.Services.Converter.CsvToDomain;
+using ACEOMM.Services.Converter.CsvToDomain;
 using ACEOMM.Domain.Model;
 using ACEOMM.Domain.Model.Businesses;
 using System;
@@ -206,19 +206,27 @@ namespace ACEOMM.Services
         {
             logger.Info("Importing {0}", businessType.ToString());
             await Task.Delay(1);
-            _progressText = "Reading " + businessType.ToString();
-            var list = ParseFile(filename, converter.Convert);
-            _progressText = "Parsing " + businessType.ToString();
-            var max = list.Count();
-            var current = 0;
-            foreach (var imported in list)
+            try
             {
-                current++;
-                _progressCallback(max, current, _progressText);
-                var existing = FindBusiness(businessType, imported, useName);
-                updateCallback(existing, imported);
+                _progressText = "Reading " + businessType.ToString();
+                var list = ParseFile(filename, converter.Convert);
+                _progressText = "Parsing " + businessType.ToString();
+                var max = list.Count();
+                var current = 0;
+                foreach (var imported in list)
+                {
+                    current++;
+                    _progressCallback(max, current, _progressText);
+                    var existing = FindBusiness(businessType, imported, useName);
+                    updateCallback(existing, imported);
+                }
+                ParseFileForModRelations(filename, _businesses.Where(x => x.Type == businessType).ToList());
             }
-            ParseFileForModRelations(filename, _businesses.Where(x => x.Type == businessType).ToList());
+            catch (Exception ex)
+            {
+                logger.Error(ex);
+                throw;
+            }
             logger.Info("Done importing {0}", businessType.ToString());
         }
 
@@ -251,17 +259,25 @@ namespace ACEOMM.Services
         {
             logger.Info("Importing products");
             await Task.Delay(1);
-            _progressText = "Reading Products";
-            var list = ParseFile(filename, new CsvToProductConverter().Convert);
-            _progressText = "Parsing Products";
-            var max = list.Count();
-            var current = 0;
-            foreach (var imported in list)
+            try
             {
-                current++;
-                _progressCallback(max, current, _progressText);
-                var existing = FindProduct(imported, CsvToProductConverter.IdField == -1);
-                UpdateProduct(existing, imported);
+                _progressText = "Reading Products";
+                var list = ParseFile(filename, new CsvToProductConverter().Convert);
+                _progressText = "Parsing Products";
+                var max = list.Count();
+                var current = 0;
+                foreach (var imported in list)
+                {
+                    current++;
+                    _progressCallback(max, current, _progressText);
+                    var existing = FindProduct(imported, CsvToProductConverter.IdField == -1);
+                    UpdateProduct(existing, imported);
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex);
+                throw;
             }
             logger.Info("Done importing products");
         }
