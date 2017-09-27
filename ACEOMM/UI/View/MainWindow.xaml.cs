@@ -104,5 +104,11 @@ namespace ACEOMM.UI.View
             var vm = (MainWindowViewModel)DataContext;
             e.Cancel = !vm.CanExit();
         }
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            var vm = (MainWindowViewModel)DataContext;
+            vm.CheckForUpdates();
+        }
     }
 }

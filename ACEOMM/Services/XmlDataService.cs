@@ -50,6 +50,8 @@ namespace ACEOMM.Services
             return _countries;
         }
 
+        public string Version { get; private set; }
+
         private void LoadCountries()
         {
             logger.Info("Loading countries");
@@ -374,6 +376,12 @@ namespace ACEOMM.Services
 
             var document = new XmlDocument();
             document.Load(fullFilename);
+
+            var declaration = document.ChildNodes.OfType<XmlDeclaration>().FirstOrDefault();
+            if (declaration != null)
+                Version = declaration.Version;
+            else
+                Version = string.Empty;
 
             LoadCountries();
             LoadProducts(document);

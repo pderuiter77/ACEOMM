@@ -234,6 +234,14 @@ namespace ACEOMM.UI.ViewModel
         public ICommand EditProductCommand { get; set; }
         public ICommand RemoveProductCommand { get; set; }
 
+        public void CheckForUpdates()
+        {
+            if (UpdateService.CheckForUpdates())
+            {
+                _view.ShowMessage("A newer version is available");
+            }
+        }
+
         private void LoadData()
         {
             CurrentAction = "Loading data";
@@ -443,6 +451,7 @@ namespace ACEOMM.UI.ViewModel
 
             _products.Add(product);
             Products.Refresh();
+            CurrentProduct = product;
             EditProduct();
         }
 

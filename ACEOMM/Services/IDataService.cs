@@ -6,6 +6,8 @@ namespace ACEOMM.Services
 {
     public interface IDataService
     {
+        string Version { get; }
+
         IEnumerable<Mod> GetMods();
         IEnumerable<Business> GetBusinesses();
         IEnumerable<Product> GetProducts();
