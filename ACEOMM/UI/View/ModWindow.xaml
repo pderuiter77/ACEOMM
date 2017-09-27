@@ -3,6 +3,8 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:scm="clr-namespace:System.ComponentModel;assembly=WindowsBase"
         xmlns:model="clr-namespace:ACEOMM.Domain.Model"
+        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+        xmlns:behaviors="clr-namespace:ACEOMM.UI.Behaviors"
         Title="{Binding Current.Name}" Height="600" Width="800" WindowStartupLocation="CenterOwner">
     <Window.Resources>
         <CollectionViewSource Source="{Binding Current.Businesses}" x:Key="GridItems">
@@ -49,6 +51,9 @@
                         <RowDefinition Height="*" />
                     </Grid.RowDefinitions>
                     <DataGrid Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2" SelectedItem="{Binding SelectedModBusiness}" IsSynchronizedWithCurrentItem="True" ItemsSource="{Binding Source={StaticResource GridItems}}" IsReadOnly="True" AutoGenerateColumns="False">
+                        <i:Interaction.Behaviors>
+                            <behaviors:SelectedItemsDataGridBehavior SelectedItemsList="{Binding SelectedModBusinesses, Mode=TwoWay}" />
+                        </i:Interaction.Behaviors>
                         <DataGrid.InputBindings>
                             <MouseBinding Gesture="LeftDoubleClick" Command="{Binding RemoveBusinessFromModCommand}" />
                         </DataGrid.InputBindings>
@@ -85,6 +90,9 @@
                         <Button Content="&gt;" Command="{Binding RemoveBusinessFromModCommand}" />
                     </StackPanel>
                     <DataGrid Grid.Column="3" Grid.Row="1" Grid.ColumnSpan="2" SelectedItem="{Binding SelectedBusiness}" IsSynchronizedWithCurrentItem="True"  ItemsSource="{Binding Businesses}" IsReadOnly="True" AutoGenerateColumns="False">
+                        <i:Interaction.Behaviors>
+                            <behaviors:SelectedItemsDataGridBehavior SelectedItemsList="{Binding SelectedBusinesses, Mode=TwoWay}" />
+                        </i:Interaction.Behaviors>
                         <DataGrid.InputBindings>
                             <MouseBinding Gesture="LeftDoubleClick" Command="{Binding AddBusinessToModCommand}" />
                         </DataGrid.InputBindings>

@@ -1,11 +1,9 @@
 ﻿using ACEOMM.Domain.Model;
 using ACEOMM.UI.Commands;
 using ACEOMM.UI.Interfaces;
-using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Data;
 using System.Windows.Input;
 
@@ -38,27 +36,43 @@ namespace ACEOMM.UI.ViewModel
 
         private bool CanAddBusinessToMod()
         {
-            return SelectedBusiness != null;
+            return SelectedBusinesses != null && SelectedBusinesses.Count > 0;
         }
 
         private void AddBusinessToMod()
         {
-            Current.Businesses.Add(SelectedBusiness);
+            for (var i = SelectedBusinesses.Count - 1; i >= 0; i--)
+                Current.Businesses.Add((Business)SelectedBusinesses[i]);
             Businesses.Refresh();
             
         }
 
         private bool CanRemoveBusinessFromMod()
         {
-            return SelectedModBusiness != null;
+            return SelectedModBusinesses != null && SelectedModBusinesses.Count > 0;
         }
 
         private void RemoveBusinessFromMod()
         {
-            Current.Businesses.Remove(SelectedModBusiness);
+            for (var i = SelectedModBusinesses.Count - 1; i >= 0; i--)
+                Current.Businesses.Remove((Business)SelectedModBusinesses[i]);
             Businesses.Refresh();
         }
         #endregion
+
+        private IList _selectedModBusinesses;
+        public IList SelectedModBusinesses
+        {
+            get { return _selectedModBusinesses; }
+            set { SetProperty(ref _selectedModBusinesses, value); }
+        }
+
+        private IList _selectedBusinesses;
+        public IList SelectedBusinesses
+        {
+            get { return _selectedBusinesses; }
+            set { SetProperty(ref _selectedBusinesses, value); }
+        }
 
         private List<Business> _businesses;
         public ListCollectionView Businesses { get; private set; }

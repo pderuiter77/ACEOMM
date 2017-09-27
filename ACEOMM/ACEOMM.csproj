@@ -89,6 +89,7 @@
     <Compile Include="Services\Converter\DomainToJson\Model\JsonProducts.cs" />
     <Compile Include="Services\UpdateService.cs" />
     <Compile Include="UI\Behaviors\BindableSelectedItemBehavior.cs" />
+    <Compile Include="UI\Behaviors\SelectedItemsDataGridBehavior.cs" />
     <Compile Include="UI\Converters\ColorToBrushConverter.cs" />
     <Compile Include="UI\Converters\ColorToHexConverter.cs" />
     <Compile Include="UI\Interfaces\IBusinessView.cs" />

@@ -20,6 +20,7 @@ namespace ACEOMM.Services
 
         private static string DetermineInstallPath()
         {
+            //return @"C:\Program Files (x86)\Steam\steamapps\common\Airport CEO";
             // Step 1: Find Steam path
             var steamPath = ReadSteamInstallPathFromRegistry();
             if (string.IsNullOrWhiteSpace(steamPath))
@@ -134,6 +135,7 @@ namespace ACEOMM.Services
         private static void InstallBusiness(Business business, string modPath) 
         {
             var installPath = BusinessInstallPath(business, modPath) + business.Name;
+            logger.Info("Installing business to {0}", installPath);
             if (!Directory.Exists(installPath))
                 Directory.CreateDirectory(installPath);
 
@@ -168,8 +170,12 @@ namespace ACEOMM.Services
         {
             // Step 1 : Find or create mod folder
             var companiesInstallPath = InstallPath + CompaniesPath + mod.Name;
+            logger.Info("Trying to install to {0}", companiesInstallPath);
             if (!Directory.Exists(companiesInstallPath))
+            {
+                logger.Info("Path not found, creating");
                 Directory.CreateDirectory(companiesInstallPath);
+            }
             // Step 2 : Install businesses
             foreach (var business in mod.Businesses)
             {

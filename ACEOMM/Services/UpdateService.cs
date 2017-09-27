@@ -17,10 +17,5 @@ namespace ACEOMM.Services
                 return remoteVersion != currentVersion;
             }
         }
-
-        internal static bool CheckForUpdates(object version)
-        {
-            throw new NotImplementedException();
-        }
     }
 }
