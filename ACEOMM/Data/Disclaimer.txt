@@ -1,1 +1,9 @@
-﻿
+All data and information provided by pderuiter (the creator) in ACEOMM (the program) are for general information purposes only.
+All information is provided on an as-is basis.
+
+The creator makes no representations as to accuracy, completeness, correctness, suitability, or validity of the program any information provided.
+The creator will not be liable for any errors, omissions, or delays in the program or its information or any losses, injuries, or damages arising from its use.
+
+In no event shall the creator be liable for any special, direct, indirect, consequential, or incidental damages or any damages whatsoever, 
+whether in an action of contract, negligence or other tort, arising out of or in connection with the use of the program or the contents of the program. 
+The creator reserves the right to make additions, deletions, or modification to the contents on the program at any time without prior notice.
