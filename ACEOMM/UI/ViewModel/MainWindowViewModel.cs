@@ -482,7 +482,14 @@ namespace ACEOMM.UI.ViewModel
         {
             try
             {
-                InstallService.Install(CurrentTreeEntity as Mod);
+                var selectedMod = CurrentTreeEntity as Mod;
+                if (selectedMod != null && selectedMod != Mod.UnknownMod)
+                    InstallService.Install(selectedMod);
+                else
+                {
+                    foreach(Mod mod in Mods)
+                        InstallService.Install(mod);
+                }
             }
             catch (Exception ex)
             {
@@ -497,7 +504,14 @@ namespace ACEOMM.UI.ViewModel
 
         private void Uninstall()
         {
-            InstallService.Uninstall(CurrentTreeEntity as Mod);
+            var selectedMod = CurrentTreeEntity as Mod;
+            if (selectedMod != null && selectedMod != Mod.UnknownMod)
+                InstallService.Uninstall(selectedMod);
+            else
+            {
+                foreach (Mod mod in Mods)
+                    InstallService.Uninstall(mod);
+            }
         }
 
         private void DoDownload(List<Business> businessWorklist, List<Product> productWorklist, Action<int, int, string> updateCallback, Action<string> ErrorCallback)

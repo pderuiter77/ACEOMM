@@ -218,6 +218,11 @@ namespace ACEOMM.Services
             var fileName = Path.Combine(installPath, string.Format("{0}Products.json", type.ToString()));
             File.WriteAllText(fileName, json);
             File.WriteAllLines(Path.Combine(installPath, string.Format("ACEOMM {0}Products.mod", type.ToString())), products.Select(x => x.Id.ToString()).ToList());
+            foreach (var product in products)
+            {
+                var imagePath = @".\Data\Images\Products\";
+                InstallLogo(product.Logo, imagePath, installPath);
+            }
         }
 
         private static void InstallProducts(Mod mod, Dictionary<JsonProduct, string> installedProducts, bool useDefaults)
@@ -383,6 +388,32 @@ namespace ACEOMM.Services
             return File.ReadAllText(filename) == "TRUE";
         }
 
+        private static void UninstallModBusinesses(Mod mod)
+        {
+            // Step 1 : Find mod folder
+            var companiesInstallPath = InstallPath + CompaniesPath + mod.Name;
+            logger.Info("Trying to uninstall mod businesses from {0}", companiesInstallPath);
+            if (!Directory.Exists(companiesInstallPath))
+            {
+                logger.Info("Path not found, finish");
+                return;
+            }
+            Directory.Delete(companiesInstallPath, true);
+        }
+
+        private static void UninstallModProducts(Mod mod)
+        {
+            // Step 1 : Find mod folder
+            var productsInstallPath = InstallPath + ProductsPath + mod.Name;
+            logger.Info("Trying to uninstall mod products from {0}", productsInstallPath);
+            if (!Directory.Exists(productsInstallPath))
+            {
+                logger.Info("Path not found, finish");
+                return;
+            }
+            Directory.Delete(productsInstallPath, true);
+        }
+
         public static void Install(Mod mod)
         {
             if (mod == null)
@@ -412,10 +443,15 @@ namespace ACEOMM.Services
 
             logger.Info("Uninstalling {0}", mod.Name);
 
+            logger.Info("Getting already installed products");
             var installedProducts = GetInstalledProducts();
+            logger.Info("Found {0} installed products", installedProducts.Count);
+            logger.Info("Getting already installed businesses");
             var installedBusinesses = GetInstalledBusinesses();
+            logger.Info("Found {0} installed businesses", installedBusinesses.Count);
 
-            // TODO: Uninstall
+            UninstallModBusinesses(mod);
+            UninstallModProducts(mod);
 
             logger.Info("Uninstalled {0} businesss", mod.Businesses.Count);
         }
