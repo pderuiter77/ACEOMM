@@ -2,11 +2,11 @@
 {
     public enum BusinessClass
     {
-        Unknown,
         Cheap,
         Small,
         Medium,
         Big,
-        Exclusive
+        Exclusive,
+        Unknown
     }
 }

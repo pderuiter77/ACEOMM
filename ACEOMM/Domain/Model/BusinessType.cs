@@ -3,10 +3,10 @@
     public enum BusinessType
     {
         Unknown,
-        Airline,
+        Contractor,
         AviationFuelSupplier,
         Bank,
-        Contractor,
+        Airline,
         Franchise
     }
 }
