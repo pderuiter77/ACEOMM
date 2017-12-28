@@ -3,6 +3,7 @@ using ACEOMM.Domain.Model.Businesses;
 using ACEOMM.Services;
 using ACEOMM.UI.Commands;
 using ACEOMM.UI.Interfaces;
+using NLog;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -19,10 +20,12 @@ namespace ACEOMM.UI.ViewModel
     {
         private IMainView _view;
         private IDataService _dataService;
+        private static ILogger logger = LogManager.GetCurrentClassLogger();
 
         protected MainWindowViewModel(IMainView view, IDataService dataService)
             : base(view)
         {
+            logger.Debug("Starting Main window");
             _view = view;
             _dataService = dataService;
             AvailableGroupings = new List<string>
@@ -38,6 +41,7 @@ namespace ACEOMM.UI.ViewModel
             InitializeCommands();
             InitializeData();
             LoadData();
+            logger.Debug("Ready Player One");
         }
 
         public MainWindowViewModel(IMainView view)
@@ -53,6 +57,9 @@ namespace ACEOMM.UI.ViewModel
 
         private void InitializeData()
         {
+            logger.Debug("Initializing data structures");
+            _liveries = new List<Livery>();
+            Liveries = new ListCollectionView(_liveries);
             _countries = new List<Country>();
             Countries = new ListCollectionView(_countries);
 
@@ -82,6 +89,8 @@ namespace ACEOMM.UI.ViewModel
                     result = result && CultureInfo.CurrentUICulture.CompareInfo.IndexOf(business.Status.ToString(), StatusFilter, CompareOptions.IgnoreCase) >= 0;
                 if (!string.IsNullOrWhiteSpace(TypeFilter))
                     result = result && CultureInfo.CurrentUICulture.CompareInfo.IndexOf(business.Type.ToString(), TypeFilter, CompareOptions.IgnoreCase) >= 0;
+                if (!string.IsNullOrWhiteSpace(RegionFilter))
+                    result = result && CultureInfo.CurrentUICulture.CompareInfo.IndexOf(business.Region, TypeFilter, CompareOptions.IgnoreCase) >= 0;
                 return result;
             };
             
@@ -89,6 +98,8 @@ namespace ACEOMM.UI.ViewModel
             Products = new ListCollectionView(_products);
         }
 
+        private List<Livery> _liveries;
+        public ListCollectionView Liveries { get; private set; }
         private List<Country> _countries;
         public ListCollectionView Countries { get; private set; }
         private List<Mod> _mods;
@@ -199,6 +210,7 @@ namespace ACEOMM.UI.ViewModel
         #region Commands
         private void InitializeCommands()
         {
+            logger.Debug("Initializing commands");
             LoadDataCommand = new RelayCommand(LoadData);
             SaveDataCommand = new RelayCommand(SaveData);
             ImportDataCommand = new RelayCommand(ImportData);
@@ -244,6 +256,7 @@ namespace ACEOMM.UI.ViewModel
 
         private void LoadData()
         {
+            logger.Debug("Loading data");
             CurrentAction = "Loading data";
             _dataService.Load(@".\Data");
 
@@ -258,6 +271,9 @@ namespace ACEOMM.UI.ViewModel
 
             _mods.Clear();
             _mods.AddRange(_dataService.GetMods());
+
+            _liveries.Clear();
+            _liveries.AddRange(_dataService.GetLiveries());
 
             CurrentAction = "Loaded data";
         }
@@ -279,7 +295,7 @@ namespace ACEOMM.UI.ViewModel
 
         private async void ImportData()
         {
-            var svc = new ImportService(_businesses, _products, _mods, _countries, UpdateProgress);
+            var svc = new ImportService(_businesses, _products, _mods, _countries, _liveries, UpdateProgress);
             await svc.ImportProducts("ShopProducts.txt");
             await svc.ImportProducts("RestaurantProducts.txt");
             await svc.ImportAirlines("Airlines.txt");
@@ -421,7 +437,7 @@ namespace ACEOMM.UI.ViewModel
 
         public void EditBusiness()
         {
-            _view.EditBusiness(CurrentBusiness, _products, _countries);
+            _view.EditBusiness(CurrentBusiness, _products, _countries, _liveries);
         }
 
         private bool CanEditEntity(Entity entity)
@@ -665,6 +681,17 @@ namespace ACEOMM.UI.ViewModel
             set
             {
                 SetProperty(ref _typeFilter, value);
+                Businesses.Refresh();
+            }
+        }
+
+        private string _regionFilter;
+        public string RegionFilter
+        {
+            get { return _regionFilter; }
+            set
+            {
+                SetProperty(ref _regionFilter, value);
                 Businesses.Refresh();
             }
         }

@@ -39,6 +39,7 @@ namespace ACEOMM.Services.Converter.XmlToDomain
         {
             base.Fill(entity, node);
             entity.CEO = GetAttributeValue(node, "CEO");
+            entity.Region = GetAttributeValue(node, "Region");
             entity.Country = LookupCountry(node, "Country");
             entity.Class = ConvertClass(node, "Class");
             entity.Logo = ConvertLogo(node);

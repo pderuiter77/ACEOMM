@@ -1,6 +1,8 @@
 ﻿using ACEOMM.Domain.Model;
 using ACEOMM.Domain.Model.Businesses;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
 
 namespace ACEOMM.Services.Converter.CsvToDomain
 {
@@ -19,5 +21,7 @@ namespace ACEOMM.Services.Converter.CsvToDomain
 
         public static int IATAField = 9;
         public static int ICAOField = 10;
+
+        public static int FleetStartField = 12;
     }
 }

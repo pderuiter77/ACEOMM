@@ -11,6 +11,7 @@ namespace ACEOMM.Services
         IEnumerable<Mod> GetMods();
         IEnumerable<Business> GetBusinesses();
         IEnumerable<Product> GetProducts();
+        IEnumerable<Livery> GetLiveries();
         IEnumerable<Country> GetCountries();
 
         void Load(string dataPath);

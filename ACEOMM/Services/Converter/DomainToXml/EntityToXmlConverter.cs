@@ -1,4 +1,6 @@
 ﻿using ACEOMM.Domain.Model;
+using System.Runtime.InteropServices;
+using System.Text;
 using System.Xml;
 
 namespace ACEOMM.Services.Converter.DomainToXml

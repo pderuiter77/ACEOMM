@@ -10,6 +10,7 @@ namespace ACEOMM.Services.Converter.DomainToXml
         {
             base.Convert(node, document, entity);
             node.SetAttribute("CEO", entity.CEO);
+            node.SetAttribute("Region", entity.Region);
             node.SetAttribute("Country", entity.Country.Code);
             node.SetAttribute("Class", entity.Class.ToString());
             node.AppendChild(ConvertLogo(document, entity.Logo));

@@ -78,11 +78,36 @@
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
                     </Grid.RowDefinitions>
                     <Label Grid.Column="0" Grid.Row="0" Content="IATA" />
                     <TextBox Grid.Column="1" Grid.Row="0" Text="{Binding Current.IATA}" />
                     <Label Grid.Column="2" Grid.Row="0" Content="ICAO" />
                     <TextBox Grid.Column="3" Grid.Row="0" Text="{Binding Current.ICAO}" />
+                    <DataGrid Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2" SelectedItem="{Binding SelectedAirlineLivery}" IsSynchronizedWithCurrentItem="True" ItemsSource="{Binding Current.Liveries}" IsReadOnly="True" AutoGenerateColumns="False">
+                        <DataGrid.InputBindings>
+                            <MouseBinding Gesture="LeftDoubleClick" Command="{Binding RemoveLiveryFromAirlineCommand}" />
+                        </DataGrid.InputBindings>
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Airline" Binding="{Binding Airline}" />
+                            <DataGridTextColumn Header="Aircraft" Binding="{Binding Aircraft}" />
+                            <DataGridTextColumn Header="Path" Binding="{Binding Path}" />
+                        </DataGrid.Columns>
+                    </DataGrid>
+                    <StackPanel Grid.Column="2" Grid.Row="1">
+                        <Button Content="&lt;" Command="{Binding AddLiveryToAirlineCommand}" />
+                        <Button Content="&gt;" Command="{Binding RemoveLiveryFromAirlineCommand}" />
+                    </StackPanel>
+                    <DataGrid Grid.Column="3" Grid.Row="1" Grid.ColumnSpan="2" SelectedItem="{Binding SelectedLivery}" IsSynchronizedWithCurrentItem="True"  ItemsSource="{Binding Liveries}" IsReadOnly="True" AutoGenerateColumns="False">
+                        <DataGrid.InputBindings>
+                            <MouseBinding Gesture="LeftDoubleClick" Command="{Binding AddLiveryToAirlineCommand}" />
+                        </DataGrid.InputBindings>
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Airline" Binding="{Binding Airline}" />
+                            <DataGridTextColumn Header="Aircraft" Binding="{Binding Aircraft}" />
+                            <DataGridTextColumn Header="Path" Binding="{Binding Path}" />
+                        </DataGrid.Columns>
+                    </DataGrid>
                 </Grid>
             </TabItem>
             <TabItem Header="Bank" Visibility="{Binding IsBank, Converter={StaticResource BooleanToVisibilityConverter}}">

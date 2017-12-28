@@ -6,7 +6,7 @@ namespace ACEOMM.UI.Interfaces
 {
     public interface IMainView : IView
     {
-        bool EditBusiness(Business entity, List<Product> products, List<Country> countries);
+        bool EditBusiness(Business entity, List<Product> products, List<Country> countries, List<Livery> liveries);
 
         bool EditMod(Mod entity, List<Business> businesses);
 

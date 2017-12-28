@@ -22,7 +22,6 @@ namespace ACEOMM.Services.Converter.CsvToDomain
             return product ?? Product.UnknownProduct;
         }
 
-
         private List<Product> ConvertProducts(string[] fields, int startField)
         {
             var result = new List<Product>();

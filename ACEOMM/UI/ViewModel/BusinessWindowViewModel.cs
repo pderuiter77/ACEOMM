@@ -39,6 +39,9 @@ namespace ACEOMM.UI.ViewModel
             _bankTypes = Enum.GetValues(typeof(BankType)).Cast<BankType>().ToList();
             BankTypes = new ListCollectionView(_bankTypes);
 
+            _liveries = new List<Livery>();
+            Liveries = new ListCollectionView(_liveries);
+
             _franchiseTypes = Enum.GetValues(typeof(FranchiseType)).Cast<FranchiseType>().ToList();
             FranchiseTypes = new ListCollectionView(_franchiseTypes);
 
@@ -59,12 +62,29 @@ namespace ACEOMM.UI.ViewModel
             set { SetProperty(ref _selectedFranchiseProduct, value); }
         }
 
+        private Livery _selectedLivery;
+        public Livery SelectedLivery
+        {
+            get { return _selectedLivery; }
+            set { SetProperty(ref _selectedLivery, value); }
+        }
+
+        private Livery _selectedAirlineLivery;
+        public Livery SelectedAirlineLivery
+        {
+            get { return _selectedAirlineLivery; }
+            set { SetProperty(ref _selectedAirlineLivery, value); }
+        }
+
         private string _logoPath;
         public string LogoPath
         {
             get { return _logoPath; }
             set { SetProperty(ref _logoPath, value); }
         }
+
+        private List<Livery> _liveries;
+        public ListCollectionView Liveries { get; private set; }
 
         private List<FranchiseType> _franchiseTypes;
         public ListCollectionView FranchiseTypes { get; private set; }
@@ -109,15 +129,48 @@ namespace ACEOMM.UI.ViewModel
             DownloadImageCommand = new RelayCommand(CanDownloadImage, DownloadImage);
             AddProductToFranchiseCommand = new RelayCommand(CanAddProductToFranchise, AddProductToFranchise);
             RemoveProductFromFranchiseCommand = new RelayCommand(CanRemoveProductFromFranchise, RemoveProductFromFranchise);
+            AddLiveryToAirlineCommand = new RelayCommand(CanAddLiveryToAirline, AddLiveryToAirline);
+            RemoveLiveryFromAirlineCommand = new RelayCommand(CanRemoveLiveryFromAirline, RemoveLiveryFromAirline);
         }
 
         public ICommand AddProductToFranchiseCommand { get; private set; }
         public ICommand RemoveProductFromFranchiseCommand { get; private set; }
+        public ICommand AddLiveryToAirlineCommand { get; private set; }
+        public ICommand RemoveLiveryFromAirlineCommand { get; private set; }
         public ICommand SelectImageCommand { get; private set; }
         public ICommand OpenUrlCommand { get; private set; }
         public ICommand DownloadImageCommand { get; private set; }
 
         private string _imageBasePath;
+
+        private bool CanAddLiveryToAirline()
+        {
+            return SelectedLivery != null;
+        }
+
+        private void AddLiveryToAirline()
+        {
+            var airline = Current as Airline;
+            if (airline == null)
+                return;
+            airline.Liveries.Add(SelectedLivery);
+            Liveries.Refresh();
+        }
+
+        private bool CanRemoveLiveryFromAirline()
+        {
+            return SelectedAirlineLivery != null;
+        }
+
+        private void RemoveLiveryFromAirline()
+        {
+            var airline = Current as Airline;
+            if (airline == null)
+                return;
+
+            airline.Liveries.Remove(SelectedAirlineLivery);
+            Liveries.Refresh();
+        }
 
         private bool CanAddProductToFranchise()
         {
@@ -234,7 +287,7 @@ namespace ACEOMM.UI.ViewModel
             LogoPath = Path.GetFullPath(Path.Combine(_imageBasePath, Current.Logo.LocalFilename));
         }
 
-        public void Initialize(Business entity, List<Product> products, List<Country> countries)
+        public void Initialize(Business entity, List<Product> products, List<Country> countries, List<Livery> liveries)
         {
             Current = entity;
             _imageBasePath = Path.GetFullPath(string.Format(@".\Data\Images\Businesses\{0}\", Current.Type.ToString()));
@@ -246,6 +299,9 @@ namespace ACEOMM.UI.ViewModel
 
             _countries.Clear();
             _countries.AddRange(countries);
+
+            _liveries.Clear();
+            _liveries.AddRange(liveries);
         }
     }
 }

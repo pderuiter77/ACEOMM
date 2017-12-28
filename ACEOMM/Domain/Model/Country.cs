@@ -11,6 +11,7 @@ namespace ACEOMM.Domain.Model
         public Guid Id { get; set; }
         public string Code { get; set; }
         public string Name { get; set; }
+        public string Region { get; set; }
 
         private static Country _unknownCountry = new Country { Code = "ZZ", Name = "Unknown" };
 

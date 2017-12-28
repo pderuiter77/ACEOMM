@@ -17,6 +17,8 @@ namespace ACEOMM.Services.Converter.DomainToJson.Model
         public int businessType { get; set; }
         [JsonProperty(Order = 6)]
         public string CEOName { get; set; }
+        [JsonProperty(Order = 7)]
+        public string region { get; set; }
 
         [JsonIgnore]
         public bool IsDefault { get; set; }
@@ -32,6 +34,7 @@ namespace ACEOMM.Services.Converter.DomainToJson.Model
             jsonBusiness.businessClass = (int)business.Class;
             jsonBusiness.businessType = (int)business.Type;
             jsonBusiness.CEOName = business.CEO;
+            jsonBusiness.region = business.Region;
         }
 
         public static JsonBusiness Convert(Business business)

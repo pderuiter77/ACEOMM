@@ -16,7 +16,12 @@ namespace ACEOMM.Domain.Model
         public Country Country 
         {
             get { return _country; }
-            set { SetProperty(ref _country, value); }
+            set 
+            { 
+                SetProperty(ref _country, value);
+                if (value != null)
+                    Region = Country.Region;
+            }
         }
 
         private string _ceo;
@@ -49,5 +54,12 @@ namespace ACEOMM.Domain.Model
 
         private static Business _unknownBusiness = new Business { Id = Guid.Empty, Name = "Unknown" };
         public static Business UnknownBusiness { get { return _unknownBusiness; } }
+
+        private string _region;
+        public string Region
+        {
+            get { return _region; }
+            set { SetProperty(ref _region, value); }
+        }
     }
 }

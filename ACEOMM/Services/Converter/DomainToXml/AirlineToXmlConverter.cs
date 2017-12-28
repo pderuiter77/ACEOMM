@@ -1,4 +1,5 @@
 ﻿using ACEOMM.Domain.Model.Businesses;
+using System;
 using System.Xml;
 
 namespace ACEOMM.Services.Converter.DomainToXml
@@ -10,6 +11,16 @@ namespace ACEOMM.Services.Converter.DomainToXml
             base.Convert(node, document, entity);
             node.SetAttribute("IATA", entity.IATA);
             node.SetAttribute("ICAO", entity.ICAO);
+            var mainNode = document.CreateElement("Liveries");
+            foreach (var livery in entity.Liveries)
+            {
+                var childNode = document.CreateElement("Livery");
+                var path = livery.Path;
+                path = path.Replace(AppDomain.CurrentDomain.BaseDirectory, ".");
+                childNode.SetAttribute("Path", path);
+                mainNode.AppendChild(childNode);
+            }
+            node.AppendChild(mainNode);
         }
     }
 }

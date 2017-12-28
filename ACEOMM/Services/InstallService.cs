@@ -120,6 +120,8 @@ namespace ACEOMM.Services
         {
             if (business is Franchise)
                 return JsonConvert.SerializeObject(JsonFranchise.Convert(business as Franchise), Formatting.Indented);
+            if (business is Airline)
+                return JsonConvert.SerializeObject(JsonAirline.Convert(business as Airline), Formatting.Indented);
 
             return JsonConvert.SerializeObject(JsonBusiness.Convert(business), Formatting.Indented);
         }
@@ -130,6 +132,23 @@ namespace ACEOMM.Services
                 CopyFile("NoImage.png", @".\Data\Images\", installPath);
             else
                 CopyFile(logo.LocalFilename, imagePath, installPath);
+        }
+
+        private static void InstallLiveries(Airline airline, string installPath)
+        {
+            foreach (var livery in airline.Liveries)
+            {
+                var liveryFiles = Directory.GetFiles(Path.GetFullPath(livery.Path));
+                var liveryInstallPath = Path.Combine(installPath, livery.Name);
+                if (!Directory.Exists(liveryInstallPath))
+                    Directory.CreateDirectory(liveryInstallPath);
+                
+
+                foreach (var file in liveryFiles)
+                {
+                    CopyFile(Path.GetFileName(file), Path.GetDirectoryName(file), liveryInstallPath);
+                }
+            }
         }
 
         private static void InstallBusiness(Business business, string modPath) 
@@ -146,6 +165,9 @@ namespace ACEOMM.Services
 
             var imagePath = Path.Combine(@".\Data\Images\Businesses\", business.Type.ToString());
             InstallLogo(business.Logo, imagePath, installPath);
+
+            if (business is Airline)
+                InstallLiveries(business as Airline, installPath);
 
             File.WriteAllText(Path.Combine(installPath, "ACEOMM.Mod"), business.Id.ToString());
         }

@@ -57,16 +57,18 @@ namespace ACEOMM.Services
 
         private List<Business> _businesses;
         private List<Product> _products;
+        private List<Livery> _liveries;
         private List<Mod> _mods;
         private IEnumerable<Country> _countries;
         private Action<int, int, string> _progressCallback;
 
-        public ImportService(List<Business> businesses, List<Product> products, List<Mod> mods, IEnumerable<Country> countries, Action<int, int, string> progressCallback)
+        public ImportService(List<Business> businesses, List<Product> products, List<Mod> mods, IEnumerable<Country> countries, List<Livery> liveries, Action<int, int, string> progressCallback)
         {
             _businesses = businesses;
             _products = products;
             _mods = mods;
             _countries = countries;
+            _liveries = liveries;
             _progressCallback = progressCallback;
         }
 
@@ -106,6 +108,7 @@ namespace ACEOMM.Services
             existing.Country = imported.Country;
             existing.Class = imported.Class;
             existing.CEO = imported.CEO;
+            existing.Region = imported.Region;
 
             return true;
         }

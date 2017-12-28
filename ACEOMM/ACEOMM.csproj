@@ -80,8 +80,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Domain\Model\Businesses\Livery.cs" />
     <Compile Include="Domain\Model\BusinessType.cs" />
     <Compile Include="Services\Converter\CsvToDomain\CsvToBusinessModRelationConverter.cs" />
+    <Compile Include="Services\Converter\DomainToJson\Model\JsonAirline.cs" />
     <Compile Include="Services\Converter\DomainToJson\Model\JsonBusiness.cs" />
     <Compile Include="Services\Converter\DomainToJson\Model\JsonColor.cs" />
     <Compile Include="Services\Converter\DomainToJson\Model\JsonFranchise.cs" />

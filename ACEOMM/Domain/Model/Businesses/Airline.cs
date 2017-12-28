@@ -1,4 +1,6 @@
-﻿namespace ACEOMM.Domain.Model.Businesses
+﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
+namespace ACEOMM.Domain.Model.Businesses
 {
     public class Airline : Business
     {
@@ -6,6 +8,7 @@
 
         public Airline()
         {
+            Liveries = new ObservableCollection<Livery>();
             Type = BusinessType.Airline;
         }
 
@@ -22,5 +25,7 @@
             get { return _icao; }
             set { SetProperty(ref _icao, value); }
         }
+
+        public ObservableCollection<Livery> Liveries { get; set; }
     }
 }

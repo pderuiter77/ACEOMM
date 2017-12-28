@@ -81,6 +81,7 @@
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="Name" Binding="{Binding Name}" Width="100" />
                             <DataGridTextColumn Header="Country" Binding="{Binding Country.Name}" Width="100" />
+                            <DataGridTextColumn Header="Region" Binding="{Binding Country.Region}" Width="100" />
                             <DataGridTextColumn Header="Type" Binding="{Binding Type}" Width="100" />
                             <DataGridTextColumn Header="Description" Binding="{Binding Description}" />
                         </DataGrid.Columns>
@@ -120,6 +121,7 @@
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="Name" Binding="{Binding Name}" Width="100" />
                             <DataGridTextColumn Header="Country" Binding="{Binding Country.Name}" Width="100" />
+                            <DataGridTextColumn Header="Region" Binding="{Binding Country.Region}" Width="100" />
                             <DataGridTextColumn Header="Type" Binding="{Binding Type}" Width="100"  />
                             <DataGridTextColumn Header="Description" Binding="{Binding Description}" />
                         </DataGrid.Columns>

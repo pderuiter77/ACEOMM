@@ -32,13 +32,13 @@ namespace ACEOMM.UI.View
         }
 
         #region IMainView
-        public bool EditBusiness(Business entity, List<Product> products, List<Country> countries)
+        public bool EditBusiness(Business entity, List<Product> products, List<Country> countries, List<Livery> liveries)
         {
             var window = new BusinessWindow()
             {
                 Owner = this
             };
-            (window.DataContext as BusinessWindowViewModel).Initialize(entity, products, countries);
+            (window.DataContext as BusinessWindowViewModel).Initialize(entity, products, countries, liveries);
             return window.ShowDialog().Value;
         }
 
