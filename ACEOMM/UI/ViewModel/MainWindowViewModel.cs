@@ -42,11 +42,19 @@ namespace ACEOMM.UI.ViewModel
             InitializeData();
             LoadData();
             logger.Debug("Ready Player One");
+            Title = string.Format("Airport CEO Mod Manager [{0}]", UpdateService.Version);
         }
 
         public MainWindowViewModel(IMainView view)
             :this(view, new XmlDataService())
         { }
+
+        private string _title;
+        public string Title
+        {
+            get { return _title; }
+            private set { SetProperty(ref _title, value); }
+        }
 
         private bool IsModified()
         {
@@ -250,7 +258,7 @@ namespace ACEOMM.UI.ViewModel
         {
             if (UpdateService.CheckForUpdates())
             {
-                _view.ShowMessage("A newer version is available");
+                _view.ShowMessage("A newer version is available\r\n" + UpdateService.ReleaseNotes.ToString());
             }
         }
 

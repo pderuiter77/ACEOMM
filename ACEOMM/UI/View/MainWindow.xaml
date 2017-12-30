@@ -5,7 +5,7 @@
         xmlns:modelB="clr-namespace:ACEOMM.Domain.Model.Businesses"
         xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
         xmlns:behaviors="clr-namespace:ACEOMM.UI.Behaviors"
-        Title="Airport CEO Mod Manager" Height="768" Width="1024" WindowStartupLocation="CenterScreen"
+        Title="{Binding Title}" Height="768" Width="1024" WindowStartupLocation="CenterScreen"
         Closing="Window_Closing" Loaded="Window_Loaded">
     <DockPanel>
         <Menu DockPanel.Dock="Top">
