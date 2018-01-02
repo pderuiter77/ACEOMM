@@ -20,7 +20,7 @@ namespace ACEOMM.Services.Converter.DomainToJson.Model
             Fill(jsonAirline, airline);
             jsonAirline.isCustom = true;
             jsonAirline.flightPrefix = airline.IATA;
-            jsonAirline.Fleet = airline.Liveries.Select(x => x.Name).ToList();
+            jsonAirline.fleet = airline.Liveries.Select(x => x.Aircraft).ToList();
             return jsonAirline;
         }
     }
