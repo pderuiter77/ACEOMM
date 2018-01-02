@@ -13,7 +13,7 @@ namespace ACEOMM.Services.Converter.DomainToJson.Model
         [JsonProperty(Order = 7)]
         public string flightPrefix { get; set; }
         [JsonProperty(Order = 8)]
-        public List<string> Fleet { get; set; }
+        public List<string> fleet { get; set; }
         [JsonProperty(Order = 9)]
         public bool isCustom { get; set; }
 
@@ -23,7 +23,7 @@ namespace ACEOMM.Services.Converter.DomainToJson.Model
             Fill(jsonAirline, airline);
             jsonAirline.isCustom = true;
             jsonAirline.flightPrefix = airline.IATA;
-            jsonAirline.Fleet = airline.Liveries.Select(x => x.Name).ToList();
+            jsonAirline.fleet = airline.Liveries.Select(x => x.Aircraft).Distinct().ToList();
             return jsonAirline;
         }
     }
