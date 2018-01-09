@@ -18,7 +18,7 @@ namespace ACEOMM.Services.Converter.CsvToDomain
 
         protected Product LookupProduct(string name)
         {
-            var product = _products.SingleOrDefault(x => x.Name == name);
+            var product = _products.SingleOrDefault(x => string.Equals(x.Name, name, System.StringComparison.InvariantCultureIgnoreCase));
             return product ?? Product.UnknownProduct;
         }
 

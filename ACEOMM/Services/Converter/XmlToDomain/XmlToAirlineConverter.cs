@@ -35,7 +35,8 @@ namespace ACEOMM.Services.Converter.XmlToDomain
             foreach (XmlElement liveryNode in mainNode.ChildNodes)
             {
                 var livery = LookupLivery(liveryNode, "Path");
-                result.Add(livery);
+                if (livery != Livery.UnknownLivery)
+                    result.Add(livery);
             }
             return result;
         }

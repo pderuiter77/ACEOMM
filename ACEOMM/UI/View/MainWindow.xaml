@@ -5,43 +5,148 @@
         xmlns:modelB="clr-namespace:ACEOMM.Domain.Model.Businesses"
         xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
         xmlns:behaviors="clr-namespace:ACEOMM.UI.Behaviors"
-        Title="{Binding Title}" Height="768" Width="1024" WindowStartupLocation="CenterScreen"
+        Title="Airport CEO Mod Manager" Height="768" Width="1024" WindowStartupLocation="CenterScreen"
         Closing="Window_Closing" Loaded="Window_Loaded">
     <DockPanel>
         <Menu DockPanel.Dock="Top">
             <MenuItem Header="File">
-                <MenuItem Header="{StaticResource SaveImage}" Command="{Binding SaveDataCommand}" />
-                <MenuItem Header="{StaticResource ImportImage}" Command="{Binding ImportDataCommand}" />
-                <Separator />
                 <MenuItem Header="{StaticResource ExitImage}" Command="{Binding ExitCommand}" />
             </MenuItem>
         </Menu>
         <ToolBarTray DockPanel.Dock="Top">
             <ToolBar>
-                <Button Content="{StaticResource AddModImage}" Command="{Binding AddModCommand}" ToolTip="Add a new mod" />
-                <Button Content="{StaticResource EditEntityImage}" Command="{Binding EditEntityCommand}" CommandParameter="{Binding CurrentTreeEntity}" ToolTip="Edit the current item in the tree" />
-                <Button Content="{StaticResource RemoveEntityImage}" Command="{Binding RemoveEntiyyCommand}" ToolTip="Remove the current item in the tree from its parent" />
-                <Button Content="{StaticResource InstallModImage}" Command="{Binding InstallModCommand}"  />
-                <Button Content="{StaticResource UninstallModImage}" Command="{Binding UninstallModCommand}"  />
-                <Button Content="{StaticResource DownloadImage}" Command="{Binding DownloadImagesCommand}"  />
+                <Button Command="{Binding UpdateDataCommand}" ToolTip="Update the data" ToolBar.OverflowMode="Never">
+                    <StackPanel Orientation="Vertical">
+                        <Image Source="{StaticResource ImportImage}"/>
+                        <TextBlock Text="Update" />
+                    </StackPanel>
+                </Button>
+                <Button Command="{Binding SaveDataCommand}" ToolBar.OverflowMode="Never">
+                    <StackPanel Orientation="Vertical">
+                        <Image Source="{StaticResource SaveImage}"/>
+                        <TextBlock Text="Save changes" />
+                    </StackPanel>
+                </Button>
             </ToolBar>
             <ToolBar>
-                <Button Content="{StaticResource AirlineImage}" Command="{Binding AddBusinessCommand}" CommandParameter="{x:Static model:BusinessType.Airline}" ToolTip="Add a new airline" />
-                <Button Content="{StaticResource AVFuelSupplierImage}" Command="{Binding AddBusinessCommand}" CommandParameter="{x:Static model:BusinessType.AviationFuelSupplier}" ToolTip="Add a new aviation fuel supplier" />
-                <Button Content="{StaticResource BankImage}" Command="{Binding AddBusinessCommand}" CommandParameter="{x:Static model:BusinessType.Bank}" ToolTip="Add a new bank" />
-                <Button Content="{StaticResource ContractorImage}" Command="{Binding AddBusinessCommand}" CommandParameter="{x:Static model:BusinessType.Contractor}" ToolTip="Add a new contractor" />
-                <Button Content="{StaticResource FranchiseImage}" Command="{Binding AddBusinessCommand}" CommandParameter="{x:Static model:BusinessType.Franchise}" ToolTip="Add a new franchise" />
-                <Button Content="{StaticResource EditBusinessImage}" Command="{Binding EditBusinessCommand}" ToolTip="Edit the current business selected in the grid" />
-                <Button Content="{StaticResource RemoveBusinessImage}" Command="{Binding RemoveBusinessCommand}" ToolTip="Remove the current business selected in the grid" />
+                <Button Command="{Binding AddModCommand}" ToolTip="Add a new mod" ToolBar.OverflowMode="AsNeeded">
+                    <StackPanel Orientation="Vertical">
+                        <Image Source="{StaticResource AddModImage}"/>
+                        <TextBlock Text="Add mod" />
+                    </StackPanel>
+                </Button>
+                <Button Command="{Binding EditEntityCommand}" CommandParameter="{Binding CurrentTreeEntity}" ToolTip="Edit the current item in the tree" ToolBar.OverflowMode="Never">
+                    <StackPanel Orientation="Vertical">
+                        <Image Source="{StaticResource EditEntityImage}"/>
+                        <TextBlock Text="Edit tree item" />
+                    </StackPanel>
+                </Button>
+                <Button Command="{Binding RemoveEntityCommand}" ToolTip="Remove the current item in the tree from its parent" ToolBar.OverflowMode="AsNeeded">
+                    <StackPanel Orientation="Vertical">
+                        <Image Source="{StaticResource RemoveEntityImage}"/>
+                        <TextBlock Text="Remove tree item" />
+                    </StackPanel>
+                </Button>
+                <Button Command="{Binding InstallModCommand}" ToolTip="Install mod to game folder" ToolBar.OverflowMode="Never">
+                    <StackPanel Orientation="Vertical">
+                        <Image Source="{StaticResource InstallModImage}"/>
+                        <TextBlock Text="Install mod" />
+                    </StackPanel>
+                </Button>
+                <Button Command="{Binding UninstallModCommand}" ToolTip="Uninstall mod from game folder" ToolBar.OverflowMode="Never">
+                    <StackPanel Orientation="Vertical">
+                        <Image Source="{StaticResource UninstallModImage}"/>
+                        <TextBlock Text="uninstall mod" />
+                    </StackPanel>
+                </Button>
+            </ToolBar>
+            <ToolBar>
+                <Button Command="{Binding AddBusinessCommand}" CommandParameter="{x:Static model:BusinessType.Airline}" ToolTip="Add a new airline" ToolBar.OverflowMode="Never">
+                    <StackPanel Orientation="Vertical">
+                        <Image Source="{StaticResource AirlineImage}"/>
+                        <TextBlock Text="Add airline" />
+                    </StackPanel>
+                </Button>
+                <Button Command="{Binding AddBusinessCommand}" CommandParameter="{x:Static model:BusinessType.AviationFuelSupplier}" ToolTip="Add a new aviation fuel supplier" ToolBar.OverflowMode="AsNeeded">
+                    <StackPanel Orientation="Vertical">
+                        <Image Source="{StaticResource AVFuelSupplierImage}"/>
+                        <TextBlock Text="Add fuel supplier" />
+                    </StackPanel>
+                </Button>
+                <Button Command="{Binding AddBusinessCommand}" CommandParameter="{x:Static model:BusinessType.Bank}" ToolTip="Add a new bank" ToolBar.OverflowMode="AsNeeded">
+                    <StackPanel Orientation="Vertical">
+                        <Image Source="{StaticResource BankImage}"/>
+                        <TextBlock Text="Add bank" />
+                    </StackPanel>
+                </Button>
+                <Button Command="{Binding AddBusinessCommand}" CommandParameter="{x:Static model:BusinessType.Contractor}" ToolTip="Add a new contractor" ToolBar.OverflowMode="AsNeeded">
+                    <StackPanel Orientation="Vertical">
+                        <Image Source="{StaticResource ContractorImage}"/>
+                        <TextBlock Text="Add contractor" />
+                    </StackPanel>
+                </Button>
+                <Button Command="{Binding AddBusinessCommand}" CommandParameter="{x:Static model:BusinessType.Franchise}" ToolTip="Add a new franchise" ToolBar.OverflowMode="AsNeeded">
+                    <StackPanel Orientation="Vertical">
+                        <Image Source="{StaticResource FranchiseImage}"/>
+                        <TextBlock Text="Add franchise" />
+                    </StackPanel>
+                </Button>
+                <Button Command="{Binding EditBusinessCommand}" ToolTip="Edit the current business selected in the grid" ToolBar.OverflowMode="Never">
+                    <StackPanel Orientation="Vertical">
+                        <Image Source="{StaticResource EditBusinessImage}"/>
+                        <TextBlock Text="Edit business" />
+                    </StackPanel>
+                </Button>
+                <Button Command="{Binding RemoveBusinessCommand}" ToolTip="Remove the current business selected in the grid" ToolBar.OverflowMode="AsNeeded">
+                    <StackPanel Orientation="Vertical">
+                        <Image Source="{StaticResource RemoveBusinessImage}"/>
+                        <TextBlock Text="Remove business" />
+                    </StackPanel>
+                </Button>
                 <StackPanel Orientation="Horizontal" Visibility="Collapsed">
                     <Label Content="Group by" />
                     <ComboBox SelectedItem="{Binding SelectedGrouping}" IsSynchronizedWithCurrentItem="True" ItemsSource="{Binding AvailableGroupings}" />
                 </StackPanel>
             </ToolBar>
             <ToolBar>
-                <Button Content="{StaticResource AddProductImage}" Command="{Binding AddProductCommand}" ToolTip="Add a new product" />
-                <Button Content="{StaticResource EditProductImage}" Command="{Binding EditProductCommand}" ToolTip="Edit the current product" />
-                <Button Content="{StaticResource RemoveProductImage}" Command="{Binding RemoveProductCommand}" ToolTip="Remove the current product" />
+                <Button Command="{Binding AddProductCommand}" ToolTip="Add a new product" ToolBar.OverflowMode="AsNeeded">
+                    <StackPanel Orientation="Vertical">
+                        <Image Source="{StaticResource AddProductImage}"/>
+                        <TextBlock Text="Add product" />
+                    </StackPanel>
+                </Button>
+                <Button Command="{Binding EditProductCommand}" ToolTip="Edit the current product" ToolBar.OverflowMode="Never">
+                    <StackPanel Orientation="Vertical">
+                        <Image Source="{StaticResource EditProductImage}"/>
+                        <TextBlock Text="Edit product" />
+                    </StackPanel>
+                </Button>
+                <Button Command="{Binding RemoveProductCommand}" ToolTip="Remove the current product" ToolBar.OverflowMode="AsNeeded">
+                    <StackPanel Orientation="Vertical">
+                        <Image Source="{StaticResource RemoveProductImage}"/>
+                        <TextBlock Text="Remove product" />
+                    </StackPanel>
+                </Button>
+            </ToolBar>
+            <ToolBar>
+                <ToggleButton IsChecked="{Binding UseDefaultCompanies}" Command="{Binding UseDefaultCompaniesSwitchCommand}" ToolTip="Swith use default on and off" ToolBar.OverflowMode="Never">
+                    <StackPanel Orientation="Vertical">
+                        <Image Source="{StaticResource DownloadImage}"/>
+                        <TextBlock Text="Use Default companies" />
+                    </StackPanel>
+                </ToggleButton>
+                <ToggleButton IsChecked="{Binding UseDefaultProducts}" Command="{Binding UseDefaultProductsSwitchCommand}" ToolTip="Swith use default on and off" ToolBar.OverflowMode="Never">
+                    <StackPanel Orientation="Vertical">
+                        <Image Source="{StaticResource DownloadImage}"/>
+                        <TextBlock Text="Use Default products" />
+                    </StackPanel>
+                </ToggleButton>
+                <Button Command="{Binding DownloadImagesCommand}" ToolBar.OverflowMode="AsNeeded">
+                    <StackPanel Orientation="Vertical">
+                        <Image Source="{StaticResource DownloadImage}"/>
+                        <TextBlock Text="Download images" />
+                    </StackPanel>
+                </Button>
             </ToolBar>
         </ToolBarTray>
         <TreeView ItemsSource="{Binding Mods}" DockPanel.Dock="Left">
@@ -109,7 +214,7 @@
                     <Label Content="Businesses: " />
                     <Label Content="{Binding Businesses.Count}" />
                 </StackPanel>
-                
+
             </StatusBarItem>
         </StatusBar>
         <DataGrid ItemsSource="{Binding Businesses}" SelectedItem="{Binding CurrentBusiness}" AutoGenerateColumns="False" VirtualizingPanel.IsVirtualizingWhenGrouping="True"

@@ -80,15 +80,15 @@ namespace ACEOMM.Services
         }
 
         private static string _installPath;
-        public static string InstallPath 
-        { 
-            get 
+        public static string InstallPath
+        {
+            get
             {
                 if (string.IsNullOrWhiteSpace(_installPath))
                     _installPath = DetermineInstallPath();
 
                 return _installPath;
-            } 
+            }
         }
 
         public static bool GameFound
@@ -142,7 +142,7 @@ namespace ACEOMM.Services
                 var liveryInstallPath = Path.Combine(installPath, livery.Name);
                 if (!Directory.Exists(liveryInstallPath))
                     Directory.CreateDirectory(liveryInstallPath);
-                
+
 
                 foreach (var file in liveryFiles)
                 {
@@ -151,7 +151,7 @@ namespace ACEOMM.Services
             }
         }
 
-        private static void InstallBusiness(Business business, string modPath) 
+        private static void InstallBusiness(Business business, string modPath)
         {
             var installPath = BusinessInstallPath(business, modPath) + business.Name;
             logger.Info("Installing business to {0}", installPath);
@@ -172,7 +172,7 @@ namespace ACEOMM.Services
             File.WriteAllText(Path.Combine(installPath, "ACEOMM.Mod"), business.Id.ToString());
         }
 
-        private static void CopyFile(string fileName, string sourcePath, string targetPath)
+        public static void CopyFile(string fileName, string sourcePath, string targetPath)
         {
             var sourceFile = Path.Combine(sourcePath, fileName);
             var targetFile = Path.Combine(targetPath, fileName);//.Replace("/", @"\").Replace(@"\\", @"\");
@@ -262,7 +262,7 @@ namespace ACEOMM.Services
                 {
                     if (product.Type == FranchiseType.Unknown)
                     {
-                        var msg = string.Format("Product {0} has unknown type, cannot install", product.Name);
+                        var msg = string.Format("Product {0} of frahcnise {1} has unknown type, cannot install", product.Name, franchise.Name);
                         logger.Error(msg);
                         throw new System.Exception(msg);
                     }
@@ -330,7 +330,7 @@ namespace ACEOMM.Services
                 return;
 
             var ids = File.ReadAllLines(idFile);
-            if ( products.array.Count != ids.Length)
+            if (products.array.Count != ids.Length)
                 return;
 
             for (var i = 0; i < ids.Length; i++)
@@ -339,8 +339,8 @@ namespace ACEOMM.Services
 
         private static void ReadBusinesses(Dictionary<JsonBusiness, string> list, string path, BusinessType type, FranchiseType franchiseType, bool isDefault)
         {
-            var typePath = type == BusinessType.Franchise 
-                ? franchiseType == FranchiseType.Shop 
+            var typePath = type == BusinessType.Franchise
+                ? franchiseType == FranchiseType.Shop
                     ? Path.Combine(path, "ShopFranchises")
                     : Path.Combine(path, "FoodFranchises")
                 : Path.Combine(path, string.Format("{0}s", type.ToString()));
@@ -352,7 +352,7 @@ namespace ACEOMM.Services
             foreach (var businessPath in businessPaths)
             {
                 var jsonFile = Directory.EnumerateFiles(businessPath, "*.json").First();
-                
+
                 var idFile = Path.Combine(businessPath, string.Format("ACEOMM.mod"));
                 string id = string.Empty;
 
@@ -405,9 +405,14 @@ namespace ACEOMM.Services
             return result;
         }
 
-        private static bool DefaultsFileValue(string filename)
+        private static bool GetDefaultsFileValue(string filename)
         {
             return File.ReadAllText(filename) == "TRUE";
+        }
+
+        private static void SetDefaultsFileValue(string filename, bool value)
+        {
+            File.WriteAllText(filename, value ? "TRUE" : "FALSE");
         }
 
         private static void UninstallModBusinesses(Mod mod)
@@ -436,6 +441,18 @@ namespace ACEOMM.Services
             Directory.Delete(productsInstallPath, true);
         }
 
+        public static bool UseDefaultCompanies
+        {
+            get { return GetDefaultsFileValue(InstallPath + CompaniesPath + "use_default.txt"); }
+            set { SetDefaultsFileValue(InstallPath + CompaniesPath + "use_default.txt", value); }
+        }
+
+        public static bool UseDefaultProducts
+        {
+            get { return GetDefaultsFileValue(InstallPath + ProductsPath + "use_default.txt"); }
+            set { SetDefaultsFileValue(InstallPath + ProductsPath + "use_default.txt", value); }
+        }
+
         public static void Install(Mod mod)
         {
             if (mod == null)
@@ -450,11 +467,8 @@ namespace ACEOMM.Services
             var installedBusinesses = GetInstalledBusinesses();
             logger.Info("Found {0} installed businesses", installedBusinesses.Count);
 
-            var businessesUseDefaults = DefaultsFileValue(InstallPath + CompaniesPath + "use_default.txt");
-            var productsUseDefaults = DefaultsFileValue(InstallPath + ProductsPath + "use_default.txt");
-
-            InstallBusinesses(mod, installedBusinesses, businessesUseDefaults);
-            InstallProducts(mod, installedProducts, productsUseDefaults);
+            InstallBusinesses(mod, installedBusinesses, UseDefaultCompanies);
+            InstallProducts(mod, installedProducts, UseDefaultProducts);
             logger.Info("Installed {0} businesss", mod.Businesses.Count);
         }
 

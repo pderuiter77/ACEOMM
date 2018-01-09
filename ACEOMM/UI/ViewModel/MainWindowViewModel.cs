@@ -1,12 +1,16 @@
 using ACEOMM.Domain.Model;
 using ACEOMM.Domain.Model.Businesses;
 using ACEOMM.Services;
+using ACEOMM.Services.Converter.JsonToDomain;
 using ACEOMM.UI.Commands;
 using ACEOMM.UI.Interfaces;
+using Newtonsoft.Json;
 using NLog;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -41,13 +45,38 @@ namespace ACEOMM.UI.ViewModel
             InitializeCommands();
             InitializeData();
             LoadData();
+            UseDefaultCompanies = InstallService.UseDefaultCompanies;
+            UseDefaultProducts = InstallService.UseDefaultProducts;
             logger.Debug("Ready Player One");
             Title = string.Format("Airport CEO Mod Manager [{0}]", UpdateService.Version);
+            
         }
 
         public MainWindowViewModel(IMainView view)
             :this(view, new XmlDataService())
         { }
+
+        private bool _useDefaultCompanies;
+        public bool UseDefaultCompanies
+        {
+            get { return _useDefaultCompanies; }
+            set
+            {
+                SetProperty(ref _useDefaultCompanies, value);
+                InstallService.UseDefaultCompanies = value;
+            }
+        }
+
+        private bool _useDefaultProducts;
+        public bool UseDefaultProducts
+        {
+            get { return _useDefaultProducts; }
+            set
+            {
+                SetProperty(ref _useDefaultProducts, value);
+                InstallService.UseDefaultProducts = value;
+            }
+        }
 
         private string _title;
         public string Title
@@ -235,6 +264,7 @@ namespace ACEOMM.UI.ViewModel
             EditProductCommand = new RelayCommand(CanEditProduct, EditProduct);
             RemoveProductCommand = new RelayCommand(CanRemoveProduct, RemoveProduct);
             DownloadImagesCommand = new RelayCommand(DownloadImages);
+            UpdateDataCommand = new RelayCommand(UpdateData);
         }
 
         public ICommand LoadDataCommand { get; set; }
@@ -253,6 +283,7 @@ namespace ACEOMM.UI.ViewModel
         public ICommand AddProductCommand { get; set; }
         public ICommand EditProductCommand { get; set; }
         public ICommand RemoveProductCommand { get; set; }
+        public ICommand UpdateDataCommand { get; set; }
 
         public void CheckForUpdates()
         {
@@ -260,6 +291,83 @@ namespace ACEOMM.UI.ViewModel
             {
                 _view.ShowMessage("A newer version is available\r\n" + UpdateService.ReleaseNotes.ToString());
             }
+        }
+
+        private void UpdateImages()
+        {
+            if (!Directory.Exists(@".\Data\Logos_PNG_256"))
+            {
+                logger.Info(@"Folder 'Data\Logos_PNG_256' not found");
+                return;
+            }
+            // find all installed logos
+            var newFiles = Directory.EnumerateFiles(Path.GetFullPath(@".\Data\Liveries\Logos_PNG_256\"), "*.png", SearchOption.AllDirectories);
+
+            foreach (var file in newFiles)
+            {
+                var fileName = Path.GetFileName(file);
+                var filePath = Path.GetDirectoryName(file);
+
+                var pathParts = filePath.TrimEnd(Path.DirectorySeparatorChar).Split(Path.DirectorySeparatorChar).ToList();
+                var businessType = pathParts[pathParts.Count - 1];
+                var targetPath = string.Format(@".\Data\Images\Businesses\{0}\", businessType);
+                if (!File.Exists(string.Format(@"{0}\{1}", targetPath, fileName)))
+                    logger.Warn("File '{0}' is new", fileName);
+                InstallService.CopyFile(fileName, filePath, targetPath);
+            }
+        }
+
+        private bool ShouldAutoLinkLiveries()
+        {
+            var value = ConfigurationManager.AppSettings.Get("AutoLinkLiveries");
+            return string.IsNullOrWhiteSpace(value) ? true : bool.Parse(value);
+        }
+
+        private void UpdateLiveries()
+        {
+            var autoLink = ShouldAutoLinkLiveries();
+            if (!autoLink)
+                logger.Info("Auto linking of liveries is disabled");
+
+            var identFiles = Directory.EnumerateFiles(@".\Data\Liveries\", "Identification.json", SearchOption.AllDirectories);
+            
+            foreach (var identFile in identFiles)
+            {
+                var text = File.ReadAllText(identFile);
+                var identification = JsonConvert.DeserializeObject<LiveryIdentification>(text);
+                var livery = new Livery { Aircraft = identification.aircraft, Airline = identification.airline, Path = Path.GetDirectoryName(identFile) };
+                var airline = _businesses.FirstOrDefault(x => x.Type == BusinessType.Airline && string.Equals(x.Name, identification.airline, StringComparison.InvariantCultureIgnoreCase)) as Airline;
+                var liveryPath = livery.Path.Split('\\').Last();
+                if (airline != null)
+                {
+                    if (!airline.IsEditAllowed)
+                    {
+                        logger.Info("Cannot link livery '{0}' to airline '{1}', airline is read only", livery.Path, airline.Name);
+                        continue;
+                    }
+                    if (airline.Liveries.Any(x => x.Aircraft == livery.Aircraft && Path.GetDirectoryName(x.Path).Split('\\').Last() == liveryPath))
+                        continue;
+
+                    if (autoLink)
+                        airline.Liveries.Add(livery);
+                    else
+                        logger.Info("skipping '{0}' because auto linking is off", livery.Path);
+                }
+            }
+        }
+
+        private void UpdateData()
+        {
+            logger.Info("Updating data");
+            _view.ShowMessage("Please download the liveries folder (https://drive.google.com/open?id=1wefkt_zFNReoO9asddCGaJ9yGMhPCq1t)");
+            logger.Info("Downloading data sheet to csv");
+            UpdateService.DownloadDataSheet();
+            logger.Info("Importing data");
+            ImportData();
+            logger.Info("Updating images");
+            UpdateImages();
+            logger.Info("Updating liveries");
+            UpdateLiveries();
         }
 
         private void LoadData()

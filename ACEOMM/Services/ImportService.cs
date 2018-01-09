@@ -15,6 +15,19 @@ namespace ACEOMM.Services
         private static ILogger logger = LogManager.GetCurrentClassLogger();
 
         private string _progressText = string.Empty;
+
+        private bool IsDataLine(string line)
+        {
+            if (string.IsNullOrWhiteSpace(line))
+                return false;
+            if (line.StartsWith("Name"))
+                return false;
+            if (line.StartsWith("\t"))
+                return false;
+
+            return true;
+        }
+
         private IEnumerable<T> ParseFile<T>(string filename, Func<string[], T> predicate)
             where T : Entity
         {
@@ -29,7 +42,7 @@ namespace ACEOMM.Services
             {
                 current++;
                 _progressCallback(max, current, _progressText);
-                if (string.IsNullOrWhiteSpace(line))
+                if (!IsDataLine(line))
                     continue;
 
                 var fields = line.Split('\t');
@@ -46,7 +59,7 @@ namespace ACEOMM.Services
             var relationConverter = new CsvToBusinessModRelationConverter(businesses, _mods);
             foreach (var line in lines)
             {
-                if (string.IsNullOrWhiteSpace(line))
+                if (!IsDataLine(line))
                     continue;
 
                 var fields = line.Split('\t');

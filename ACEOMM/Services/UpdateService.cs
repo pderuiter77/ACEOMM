@@ -22,5 +22,22 @@ namespace ACEOMM.Services
                 return remoteVersion.Major > currentVersion.Major || remoteVersion.Minor > currentVersion.Minor || remoteVersion.Build > currentVersion.Build;
             }
         }
+
+        public static bool DownloadDataSheet()
+        {
+            const string sheetUrl = "https://spreadsheets.google.com/feeds/download/spreadsheets/Export?key=1tMljvFW3_C3WhZhd94ygFXW3BJGdALayji7CTOwSsfY&gid={0}&exportFormat=tsv";
+            using (var client = new WebClient())
+            {
+                client.DownloadFile(string.Format(sheetUrl, "583703764"), @".\Data\Import\Airlines.txt");
+                client.DownloadFile(string.Format(sheetUrl, "230860337"), @".\Data\Import\Banks.txt");
+                client.DownloadFile(string.Format(sheetUrl, "0"), @".\Data\Import\Contractors.txt");
+                client.DownloadFile(string.Format(sheetUrl, "1357197754"), @".\Data\Import\Restaurants.txt");
+                client.DownloadFile(string.Format(sheetUrl, "879697771"), @".\Data\Import\Shops.txt");
+                client.DownloadFile(string.Format(sheetUrl, "1173787397"), @".\Data\Import\AviationFuelSuppliers.txt");
+                client.DownloadFile(string.Format(sheetUrl, "71216677"), @".\Data\Import\ShopProducts.txt");
+                client.DownloadFile(string.Format(sheetUrl, "1174509655"), @".\Data\Import\RestaurantProducts.txt");
+                return true;
+            }
+        }
     }
 }

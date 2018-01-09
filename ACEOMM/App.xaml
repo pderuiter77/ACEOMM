@@ -106,24 +106,24 @@
                 </Setter.Value>
             </Setter>
         </Style>
-        <Image x:Key="AirlineImage" Source="Res/AddAirline.png" />
-        <Image x:Key="AVFuelSupplierImage" Source="Res/AddAVFuelSupplier.png" />
-        <Image x:Key="BankImage" Source="Res/AddBank.png" />
-        <Image x:Key="ContractorImage" Source="Res/AddContractor.png" />
-        <Image x:Key="FranchiseImage" Source="Res/AddFranchise.png" />
-        <Image x:Key="EditBusinessImage" Source="Res/EditBusiness.png" />
-        <Image x:Key="RemoveBusinessImage" Source="Res/RemoveBusiness.png" />
-        <Image x:Key="AddModImage" Source="Res/AddMod.png" />
-        <Image x:Key="EditEntityImage" Source="Res/EditBusiness.png" />
-        <Image x:Key="RemoveEntityImage" Source="Res/RemoveBusiness.png" />
-        <Image x:Key="SaveImage" Source="Res/Save.png" />
-        <Image x:Key="ImportImage" Source="Res/Import.png" />
-        <Image x:Key="DownloadImage" Source="Res/Download.png" />
+        <BitmapImage x:Key="AirlineImage" UriSource="Res/AddAirline.png" />
+        <BitmapImage x:Key="AVFuelSupplierImage" UriSource="Res/AddAVFuelSupplier.png" />
+        <BitmapImage x:Key="BankImage" UriSource="Res/AddBank.png" />
+        <BitmapImage x:Key="ContractorImage" UriSource="Res/AddContractor.png" />
+        <BitmapImage x:Key="FranchiseImage" UriSource="Res/AddFranchise.png" />
+        <BitmapImage x:Key="EditBusinessImage" UriSource="Res/EditBusiness.png" />
+        <BitmapImage x:Key="RemoveBusinessImage" UriSource="Res/RemoveBusiness.png" />
+        <BitmapImage x:Key="AddModImage" UriSource="Res/AddMod.png" />
+        <BitmapImage x:Key="EditEntityImage" UriSource="Res/EditBusiness.png" />
+        <BitmapImage x:Key="RemoveEntityImage" UriSource="Res/RemoveBusiness.png" />
+        <BitmapImage x:Key="SaveImage" UriSource="Res/Save.png" />
+        <BitmapImage x:Key="ImportImage" UriSource="Res/Import.png" />
+        <BitmapImage x:Key="DownloadImage" UriSource="Res/Download.png" />
         <Image x:Key="ExitImage" Source="Res/Exit.png" />
-        <Image x:Key="InstallModImage" Source="Res/InstallMod.png" />
-        <Image x:Key="UninstallModImage" Source="Res/UninstallMod.png" />
-        <Image x:Key="AddProductImage" Source="Res/AddProduct.png" />
-        <Image x:Key="EditProductImage" Source="Res/EditProduct.png" />
-        <Image x:Key="RemoveProductImage" Source="Res/RemoveProduct.png" />
+        <BitmapImage x:Key="InstallModImage" UriSource="Res/InstallMod.png" />
+        <BitmapImage x:Key="UninstallModImage" UriSource="Res/UninstallMod.png" />
+        <BitmapImage x:Key="AddProductImage" UriSource="Res/AddProduct.png" />
+        <BitmapImage x:Key="EditProductImage" UriSource="Res/EditProduct.png" />
+        <BitmapImage x:Key="RemoveProductImage" UriSource="Res/RemoveProduct.png" />
     </Application.Resources>
 </Application>

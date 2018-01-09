@@ -16,6 +16,10 @@ namespace ACEOMM
         void App_DispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
         {
             logger.Fatal(e.Exception);
+            var innerException = e.Exception;
+            while (innerException.InnerException != null)
+                innerException = innerException.InnerException;
+            MessageBox.Show(innerException.Message, "Unexpected exception", MessageBoxButton.OK, MessageBoxImage.Error);
         }
     }
 }
