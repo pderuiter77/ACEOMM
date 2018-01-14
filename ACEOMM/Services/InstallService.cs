@@ -146,6 +146,8 @@ namespace ACEOMM.Services
 
                 foreach (var file in liveryFiles)
                 {
+                    if (file.EndsWith("Identification.json"))
+                        continue;
                     CopyFile(Path.GetFileName(file), Path.GetDirectoryName(file), liveryInstallPath);
                 }
             }

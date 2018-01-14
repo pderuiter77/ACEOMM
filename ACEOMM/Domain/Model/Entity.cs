@@ -13,8 +13,7 @@ namespace ACEOMM.Domain.Model
                 Status = EntityStatus.Modified;
 
             field = value;
-            if (PropertyChanged != null)
-                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

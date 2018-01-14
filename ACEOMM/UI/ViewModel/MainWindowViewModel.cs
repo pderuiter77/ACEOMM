@@ -257,7 +257,7 @@ namespace ACEOMM.UI.ViewModel
             RemoveBusinessCommand = new RelayCommand(CanRemoveBusiness, RemoveBusiness);
             AddModCommand = new RelayCommand(AddMod);
             EditEntityCommand = new RelayCommandOfT<Entity>(CanEditEntity, EditEntity);
-            RemoveModCommand = new RelayCommand(CanRemoveEntity, RemoveEntity);
+            RemoveEntityCommand = new RelayCommand(CanRemoveEntity, RemoveEntity);
             InstallModCommand = new RelayCommand(CanInstall, Install);
             UninstallModCommand = new RelayCommand(CanUninstall, Uninstall);
             AddProductCommand = new RelayCommand(AddProduct);
@@ -276,7 +276,7 @@ namespace ACEOMM.UI.ViewModel
         public ICommand RemoveBusinessCommand { get; set; }
         public ICommand AddModCommand { get; set; }
         public ICommand<Entity> EditEntityCommand { get; set; }
-        public ICommand RemoveModCommand { get; set; }
+        public ICommand RemoveEntityCommand { get; set; }
         public ICommand InstallModCommand { get; set; }
         public ICommand UninstallModCommand { get; set; }
         public ICommand DownloadImagesCommand { get; set; }
@@ -345,7 +345,7 @@ namespace ACEOMM.UI.ViewModel
                         logger.Info("Cannot link livery '{0}' to airline '{1}', airline is read only", livery.Path, airline.Name);
                         continue;
                     }
-                    if (airline.Liveries.Any(x => x.Aircraft == livery.Aircraft && Path.GetDirectoryName(x.Path).Split('\\').Last() == liveryPath))
+                    if (airline.Liveries.Any(x => x.Aircraft == livery.Aircraft && x.LinkPath.Equals(liveryPath, StringComparison.InvariantCultureIgnoreCase)))
                         continue;
 
                     if (autoLink)
@@ -359,7 +359,7 @@ namespace ACEOMM.UI.ViewModel
         private void UpdateData()
         {
             logger.Info("Updating data");
-            _view.ShowMessage("Please download the liveries folder (https://drive.google.com/open?id=1wefkt_zFNReoO9asddCGaJ9yGMhPCq1t)");
+            logger.Info("Don't forget to download the liveries folder (https://drive.google.com/open?id=1wefkt_zFNReoO9asddCGaJ9yGMhPCq1t)");
             logger.Info("Downloading data sheet to csv");
             UpdateService.DownloadDataSheet();
             logger.Info("Importing data");

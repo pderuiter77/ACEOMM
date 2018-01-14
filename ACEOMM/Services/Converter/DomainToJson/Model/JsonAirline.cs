@@ -35,9 +35,11 @@ namespace ACEOMM.Services.Converter.DomainToJson.Model
                     result.Add("BAE146");
 
                 if (aircraft.StartsWith("Cessna 182"))
-                    result.Add("Cessna182");
-                if (aircraft.StartsWith("Cessna 206"))
-                    result.Add("Cessna206");
+                    result.Add("CESSNA182");
+                if (aircraft.StartsWith("Cessna 208"))
+                    result.Add("CESSNA208");
+                if (aircraft.StartsWith("DHC-6"))
+                    result.Add("DHC6");
             }
 
             return result;

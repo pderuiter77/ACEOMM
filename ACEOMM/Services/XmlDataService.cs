@@ -8,6 +8,8 @@ using System.Xml;
 using ACEOMM.Services.Converter.XmlToDomain;
 using ACEOMM.Services.Converter.DomainToXml;
 using NLog;
+using Newtonsoft.Json;
+using ACEOMM.Services.Converter.JsonToDomain;
 
 namespace ACEOMM.Services
 {
@@ -357,10 +359,18 @@ namespace ACEOMM.Services
                 // Airline = Folder where liveryData.json resides
                 // Aircraft = Folder where airline resides
                 var path = Path.GetDirectoryName(liveryPath);
+                // if identification.json is available, use that
                 var pathParts = path.TrimEnd(Path.DirectorySeparatorChar).Split(Path.DirectorySeparatorChar).ToList();
                 
                 var airline = pathParts[pathParts.Count - 1];
                 var aircraft = pathParts[pathParts.Count - 2];
+                var identFileName = string.Format(@"{0}\Identification.json", path);
+                if (File.Exists(identFileName))
+                {
+                    var identification = JsonConvert.DeserializeObject<LiveryIdentification>(File.ReadAllText(identFileName));
+                    airline = identification.airline;
+                    aircraft = identification.aircraft;
+                }
 
                 _liveries.Add(new Livery { Aircraft = aircraft, Airline = airline, Path = path });
             }

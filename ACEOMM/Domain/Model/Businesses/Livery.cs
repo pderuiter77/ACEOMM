@@ -1,4 +1,6 @@
-﻿namespace ACEOMM.Domain.Model.Businesses
+﻿using System.Linq;
+
+namespace ACEOMM.Domain.Model.Businesses
 {
     public class Livery
     {
@@ -13,6 +15,14 @@
         public string Name 
         {
             get { return string.Format("{0}_{1}", Aircraft, Airline); }
+        }
+
+        public string LinkPath
+        {
+            get
+            {
+                return Path.Split('\\').Last();
+            }
         }
     }
 }
