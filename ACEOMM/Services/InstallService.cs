@@ -203,13 +203,14 @@ namespace ACEOMM.Services
             // Step 2 : Install businesses
             foreach (var business in mod.Businesses)
             {
-                var installedBusiness = installedBusinesses.FirstOrDefault(x => (useDefaults || !x.Key.IsDefault) && x.Key.name == business.Name && x.Key.Id != business.Id.ToString());
-                if (installedBusiness.Key != null)
-                {
-                    var msg = string.Format("Business '{0}' already installed ({1}), cannot install", business.Name, installedBusiness.Value);
-                    logger.Error(msg);
-                    throw new System.Exception(msg);
-                }
+                // 2018-01-14 Removing this check for now. I'm not sure the game actually cares
+                //var installedBusiness = installedBusinesses.FirstOrDefault(x => (useDefaults || !x.Key.IsDefault) && x.Key.name == business.Name && x.Key.Id != business.Id.ToString());
+                //if (installedBusiness.Key != null)
+                //{
+                //    var msg = string.Format("Business '{0}' already installed ({1}), cannot install", business.Name, installedBusiness.Value);
+                //    logger.Error(msg);
+                //    throw new System.Exception(msg);
+                //}
                 InstallBusiness(business, companiesInstallPath);
             }
 
@@ -289,12 +290,13 @@ namespace ACEOMM.Services
                     foreach (var product in franchise.Products)
                     {
                         var installedProduct = installedProducts.FirstOrDefault(x => (useDefaults || !x.Key.IsDefault) && x.Key.productType == product.Name && x.Key.Id != product.Id.ToString());
-                        if (installedProduct.Key != null)
-                        {
-                            var msg = string.Format("Product '{0}' already installed ({1}), cannot install", product.Name, installedProduct.Value);
-                            logger.Error(msg);
-                            throw new System.Exception(msg);
-                        }
+                        // 2018-01-14 Removing this check for now. I'm not sure the game actually cares
+                        //if (installedProduct.Key != null)
+                        //{
+                        //    var msg = string.Format("Product '{0}' already installed ({1}), cannot install", product.Name, installedProduct.Value);
+                        //    logger.Error(msg);
+                        //    throw new System.Exception(msg);
+                        //}
                         if (product.Type != franchise.FranchiseType)
                         {
                             var msg = string.Format("Product '{0}' has type {1}, but franchise has type {2}, cannot install", product.Name, product.Type, franchise.Type);
