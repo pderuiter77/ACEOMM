@@ -139,14 +139,14 @@ namespace ACEOMM.Services
             foreach (var livery in airline.Liveries)
             {
                 var liveryFiles = Directory.GetFiles(Path.GetFullPath(livery.Path));
-                var liveryInstallPath = Path.Combine(installPath, livery.Name);
+                var liveryInstallPath = Path.Combine(installPath, livery.LinkPath);
                 if (!Directory.Exists(liveryInstallPath))
                     Directory.CreateDirectory(liveryInstallPath);
 
 
                 foreach (var file in liveryFiles)
                 {
-                    if (file.EndsWith("Identification.json"))
+                    if (file.EndsWith("Identification.json", System.StringComparison.InvariantCultureIgnoreCase))
                         continue;
                     CopyFile(Path.GetFileName(file), Path.GetDirectoryName(file), liveryInstallPath);
                 }
@@ -182,7 +182,7 @@ namespace ACEOMM.Services
                 return;
 
             File.Copy(sourceFile, targetFile, true);
-        }
+        } 
 
         private static void InstallMiscFiles(string modPath)
         {

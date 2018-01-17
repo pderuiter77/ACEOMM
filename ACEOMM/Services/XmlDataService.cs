@@ -364,15 +364,17 @@ namespace ACEOMM.Services
                 
                 var airline = pathParts[pathParts.Count - 1];
                 var aircraft = pathParts[pathParts.Count - 2];
+                var author = string.Empty;
                 var identFileName = string.Format(@"{0}\Identification.json", path);
                 if (File.Exists(identFileName))
                 {
                     var identification = JsonConvert.DeserializeObject<LiveryIdentification>(File.ReadAllText(identFileName));
                     airline = identification.airline;
                     aircraft = identification.aircraft;
+                    author = identification.author;
                 }
 
-                _liveries.Add(new Livery { Aircraft = aircraft, Airline = airline, Path = path });
+                _liveries.Add(new Livery { Aircraft = aircraft, Airline = airline, Author = author, Path = path });
             }
             _liveries = _liveries.OrderBy(x => x.Airline).ToList();
             logger.Info("{0} liveries loaded", _liveries.Count);

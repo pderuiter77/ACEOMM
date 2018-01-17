@@ -7,6 +7,7 @@ namespace ACEOMM.Domain.Model.Businesses
         public string Aircraft { get; set; }
         public string Path { get; set; }
         public string Airline { get; set; }
+        public string Author { get; set; }
 
         private static Livery _unknownLivery = new Livery { Aircraft = "Unknown", Airline = "Unknown" };
 
@@ -14,7 +15,7 @@ namespace ACEOMM.Domain.Model.Businesses
 
         public string Name 
         {
-            get { return string.Format("{0}_{1}", Aircraft, Airline); }
+            get { return string.Format("{0}_{1}_{2}", Aircraft, Airline, Author); }
         }
 
         public string LinkPath

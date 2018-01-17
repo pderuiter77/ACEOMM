@@ -21,7 +21,7 @@
                         <TextBlock Text="Update" />
                     </StackPanel>
                 </Button>
-                <Button Command="{Binding SaveDataCommand}" ToolBar.OverflowMode="Never">
+                <Button Command="{Binding SaveDataCommand}" ToolTip="Save your changes" ToolBar.OverflowMode="Never">
                     <StackPanel Orientation="Vertical">
                         <Image Source="{StaticResource SaveImage}"/>
                         <TextBlock Text="Save changes" />
@@ -29,31 +29,31 @@
                 </Button>
             </ToolBar>
             <ToolBar>
-                <Button Command="{Binding AddModCommand}" ToolTip="Add a new mod" ToolBar.OverflowMode="AsNeeded">
+                <Button Command="{Binding AddModCommand}" ToolTip="Add a new mod (Insert)" ToolBar.OverflowMode="AsNeeded">
                     <StackPanel Orientation="Vertical">
                         <Image Source="{StaticResource AddModImage}"/>
                         <TextBlock Text="Add mod" />
                     </StackPanel>
                 </Button>
-                <Button Command="{Binding EditEntityCommand}" CommandParameter="{Binding CurrentTreeEntity}" ToolTip="Edit the current item in the tree" ToolBar.OverflowMode="Never">
+                <Button Command="{Binding EditEntityCommand}" CommandParameter="{Binding CurrentTreeEntity}" ToolTip="Edit the current item in the tree (Enter)" ToolBar.OverflowMode="Never">
                     <StackPanel Orientation="Vertical">
                         <Image Source="{StaticResource EditEntityImage}"/>
                         <TextBlock Text="Edit tree item" />
                     </StackPanel>
                 </Button>
-                <Button Command="{Binding RemoveEntityCommand}" ToolTip="Remove the current item in the tree from its parent" ToolBar.OverflowMode="AsNeeded">
+                <Button Command="{Binding RemoveEntityCommand}" ToolTip="Remove the current item in the tree from its parent (Delete)" ToolBar.OverflowMode="AsNeeded">
                     <StackPanel Orientation="Vertical">
                         <Image Source="{StaticResource RemoveEntityImage}"/>
                         <TextBlock Text="Remove tree item" />
                     </StackPanel>
                 </Button>
-                <Button Command="{Binding InstallModCommand}" ToolTip="Install mod to game folder" ToolBar.OverflowMode="Never">
+                <Button Command="{Binding InstallModCommand}" ToolTip="Install mod to game folder (F5)" ToolBar.OverflowMode="Never">
                     <StackPanel Orientation="Vertical">
                         <Image Source="{StaticResource InstallModImage}"/>
                         <TextBlock Text="Install mod" />
                     </StackPanel>
                 </Button>
-                <Button Command="{Binding UninstallModCommand}" ToolTip="Uninstall mod from game folder" ToolBar.OverflowMode="Never">
+                <Button Command="{Binding UninstallModCommand}" ToolTip="Uninstall mod from game folder(F7)" ToolBar.OverflowMode="Never">
                     <StackPanel Orientation="Vertical">
                         <Image Source="{StaticResource UninstallModImage}"/>
                         <TextBlock Text="uninstall mod" />
@@ -91,13 +91,13 @@
                         <TextBlock Text="Add franchise" />
                     </StackPanel>
                 </Button>
-                <Button Command="{Binding EditBusinessCommand}" ToolTip="Edit the current business selected in the grid" ToolBar.OverflowMode="Never">
+                <Button Command="{Binding EditBusinessCommand}" ToolTip="Edit the current business selected in the grid (Enter)" ToolBar.OverflowMode="Never">
                     <StackPanel Orientation="Vertical">
                         <Image Source="{StaticResource EditBusinessImage}"/>
                         <TextBlock Text="Edit business" />
                     </StackPanel>
                 </Button>
-                <Button Command="{Binding RemoveBusinessCommand}" ToolTip="Remove the current business selected in the grid" ToolBar.OverflowMode="AsNeeded">
+                <Button Command="{Binding RemoveBusinessCommand}" ToolTip="Remove the current business selected in the grid (Delete)" ToolBar.OverflowMode="AsNeeded">
                     <StackPanel Orientation="Vertical">
                         <Image Source="{StaticResource RemoveBusinessImage}"/>
                         <TextBlock Text="Remove business" />
@@ -109,19 +109,19 @@
                 </StackPanel>
             </ToolBar>
             <ToolBar>
-                <Button Command="{Binding AddProductCommand}" ToolTip="Add a new product" ToolBar.OverflowMode="AsNeeded">
+                <Button Command="{Binding AddProductCommand}" ToolTip="Add a new product (Insert)" ToolBar.OverflowMode="AsNeeded">
                     <StackPanel Orientation="Vertical">
                         <Image Source="{StaticResource AddProductImage}"/>
                         <TextBlock Text="Add product" />
                     </StackPanel>
                 </Button>
-                <Button Command="{Binding EditProductCommand}" ToolTip="Edit the current product" ToolBar.OverflowMode="Never">
+                <Button Command="{Binding EditProductCommand}" ToolTip="Edit the current product (Enter)" ToolBar.OverflowMode="Never">
                     <StackPanel Orientation="Vertical">
                         <Image Source="{StaticResource EditProductImage}"/>
                         <TextBlock Text="Edit product" />
                     </StackPanel>
                 </Button>
-                <Button Command="{Binding RemoveProductCommand}" ToolTip="Remove the current product" ToolBar.OverflowMode="AsNeeded">
+                <Button Command="{Binding RemoveProductCommand}" ToolTip="Remove the current product (Delete)" ToolBar.OverflowMode="AsNeeded">
                     <StackPanel Orientation="Vertical">
                         <Image Source="{StaticResource RemoveProductImage}"/>
                         <TextBlock Text="Remove product" />
@@ -129,13 +129,13 @@
                 </Button>
             </ToolBar>
             <ToolBar>
-                <ToggleButton IsChecked="{Binding UseDefaultCompanies}" Command="{Binding UseDefaultCompaniesSwitchCommand}" ToolTip="Swith use default on and off" ToolBar.OverflowMode="Never">
+                <ToggleButton IsChecked="{Binding UseDefaultCompanies}" ToolTip="Swith use default on and off" ToolBar.OverflowMode="Never">
                     <StackPanel Orientation="Vertical">
                         <Image Source="{StaticResource DownloadImage}"/>
                         <TextBlock Text="Use Default companies" />
                     </StackPanel>
                 </ToggleButton>
-                <ToggleButton IsChecked="{Binding UseDefaultProducts}" Command="{Binding UseDefaultProductsSwitchCommand}" ToolTip="Swith use default on and off" ToolBar.OverflowMode="Never">
+                <ToggleButton IsChecked="{Binding UseDefaultProducts}" ToolTip="Swith use default on and off" ToolBar.OverflowMode="Never">
                     <StackPanel Orientation="Vertical">
                         <Image Source="{StaticResource DownloadImage}"/>
                         <TextBlock Text="Use Default products" />
@@ -153,6 +153,13 @@
             <i:Interaction.Behaviors>
                 <behaviors:BindableSelectedItemBehavior SelectedItem="{Binding CurrentTreeEntity, Mode=TwoWay}" ParentItem="{Binding ParentTreeEntity, Mode=OneWayToSource}" />
             </i:Interaction.Behaviors>
+            <TreeView.InputBindings>
+                <KeyBinding Key="Delete" Command="{Binding RemoveEntityCommand}" />
+                <KeyBinding Key="Insert" Command="{Binding AddModCommand}" />
+                <KeyBinding Key="Return" Command="{Binding EditEntityCommand}" CommandParameter="{Binding CurrentTreeEntity}" />
+                <KeyBinding Key="F5" Command="{Binding InstallModCommand}" />
+                <KeyBinding Key="F7" Command="{Binding UninstallModCommand}" />
+            </TreeView.InputBindings>
             <TreeView.ItemContainerStyle>
                 <Style TargetType="{x:Type TreeViewItem}" BasedOn="{StaticResource {x:Type TreeViewItem}}">
                     <EventSetter Event="MouseDoubleClick" Handler="OnTreeViewMouseDoubleClick" />
@@ -190,6 +197,9 @@
                       ScrollViewer.CanContentScroll="True" ScrollViewer.VerticalScrollBarVisibility="Auto" IsReadOnly="True">
             <DataGrid.InputBindings>
                 <MouseBinding Gesture="LeftDoubleClick" Command="{Binding EditProductCommand}" />
+                <KeyBinding Key="Insert" Command="{Binding AddProductCommand}" />
+                <KeyBinding Key="Return" Command="{Binding EditProductCommand}" />
+                <KeyBinding Key="Delete" Command="{Binding RemoveProductCommand}" />
             </DataGrid.InputBindings>
             <DataGrid.RowStyle>
                 <Style TargetType="DataGridRow">
@@ -222,6 +232,8 @@
                       ScrollViewer.CanContentScroll="True" ScrollViewer.VerticalScrollBarVisibility="Auto" IsReadOnly="True">
             <DataGrid.InputBindings>
                 <MouseBinding Gesture="LeftDoubleClick" Command="{Binding EditBusinessCommand}" />
+                <KeyBinding Key="Return" Command="{Binding EditBusinessCommand}" />
+                <KeyBinding Key="Delete" Command="{Binding RemoveBusinessCommand}" />
             </DataGrid.InputBindings>
             <!-- <DataGrid.GroupStyle>
                 <GroupStyle>
@@ -454,6 +466,26 @@
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <TextBlock Text="{Binding Type}"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn SortMemberPath="Class">
+                    <DataGridTemplateColumn.HeaderStyle>
+                        <Style TargetType="{x:Type DataGridColumnHeader}">
+                            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                        </Style>
+                    </DataGridTemplateColumn.HeaderStyle>
+                    <DataGridTemplateColumn.HeaderTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Vertical">
+                                <TextBox Text="{Binding DataContext.ClassFilter, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, RelativeSource={RelativeSource AncestorType={x:Type Window}}}" />
+                                <Label Content="Class" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.HeaderTemplate>
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Class}"/>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>

@@ -117,7 +117,7 @@ namespace ACEOMM.UI.ViewModel
                 if (!string.IsNullOrWhiteSpace(CeoFilter))
                     result = result && CultureInfo.CurrentUICulture.CompareInfo.IndexOf(business.CEO, CeoFilter, CompareOptions.IgnoreCase) >= 0;
                 if (!string.IsNullOrWhiteSpace(CountryFilter))
-                    result = result && CultureInfo.CurrentUICulture.CompareInfo.IndexOf(business.Country.Name, CountryFilter, CompareOptions.IgnoreCase) >= 0;
+                    result = result && business.Country != null && CultureInfo.CurrentUICulture.CompareInfo.IndexOf(business.Country.Name, CountryFilter, CompareOptions.IgnoreCase) >= 0;
                 if (!string.IsNullOrWhiteSpace(AuthorFilter))
                     result = result && CultureInfo.CurrentUICulture.CompareInfo.IndexOf(business.Author, AuthorFilter, CompareOptions.IgnoreCase) >= 0;
                 if (!string.IsNullOrWhiteSpace(VersionFilter))
@@ -128,6 +128,8 @@ namespace ACEOMM.UI.ViewModel
                     result = result && CultureInfo.CurrentUICulture.CompareInfo.IndexOf(business.Type.ToString(), TypeFilter, CompareOptions.IgnoreCase) >= 0;
                 if (!string.IsNullOrWhiteSpace(RegionFilter))
                     result = result && CultureInfo.CurrentUICulture.CompareInfo.IndexOf(business.Region, TypeFilter, CompareOptions.IgnoreCase) >= 0;
+                if (!string.IsNullOrWhiteSpace(ClassFilter))
+                    result = result && CultureInfo.CurrentUICulture.CompareInfo.IndexOf(business.Class.ToString(), ClassFilter, CompareOptions.IgnoreCase) >= 0;
                 return result;
             };
             
@@ -245,6 +247,7 @@ namespace ACEOMM.UI.ViewModel
         }
 
         #region Commands
+
         private void InitializeCommands()
         {
             logger.Debug("Initializing commands");
@@ -329,13 +332,17 @@ namespace ACEOMM.UI.ViewModel
             if (!autoLink)
                 logger.Info("Auto linking of liveries is disabled");
 
+            if (!Directory.Exists(@".\Data\Liveries\"))
+            {
+                _view.ShowMessage("You must download the liveries folder from Google Drive (https://drive.google.com/open?id=1wefkt_zFNReoO9asddCGaJ9yGMhPCq1t)");
+            }
             var identFiles = Directory.EnumerateFiles(@".\Data\Liveries\", "Identification.json", SearchOption.AllDirectories);
             
             foreach (var identFile in identFiles)
             {
                 var text = File.ReadAllText(identFile);
                 var identification = JsonConvert.DeserializeObject<LiveryIdentification>(text);
-                var livery = new Livery { Aircraft = identification.aircraft, Airline = identification.airline, Path = Path.GetDirectoryName(identFile) };
+                var livery = new Livery { Aircraft = identification.aircraft, Airline = identification.airline, Author = identification.author, Path = Path.GetDirectoryName(identFile) };
                 var airline = _businesses.FirstOrDefault(x => x.Type == BusinessType.Airline && string.Equals(x.Name, identification.airline, StringComparison.InvariantCultureIgnoreCase)) as Airline;
                 var liveryPath = livery.Path.Split('\\').Last();
                 if (airline != null)
@@ -345,7 +352,7 @@ namespace ACEOMM.UI.ViewModel
                         logger.Info("Cannot link livery '{0}' to airline '{1}', airline is read only", livery.Path, airline.Name);
                         continue;
                     }
-                    if (airline.Liveries.Any(x => x.Aircraft == livery.Aircraft && x.LinkPath.Equals(liveryPath, StringComparison.InvariantCultureIgnoreCase)))
+                    if (airline.Liveries.Any(x => x.Aircraft == livery.Aircraft && x.Author == livery.Author && x.LinkPath.Equals(liveryPath, StringComparison.InvariantCultureIgnoreCase)))
                         continue;
 
                     if (autoLink)
@@ -359,7 +366,6 @@ namespace ACEOMM.UI.ViewModel
         private void UpdateData()
         {
             logger.Info("Updating data");
-            logger.Info("Don't forget to download the liveries folder (https://drive.google.com/open?id=1wefkt_zFNReoO9asddCGaJ9yGMhPCq1t)");
             logger.Info("Downloading data sheet to csv");
             UpdateService.DownloadDataSheet();
             logger.Info("Importing data");
@@ -712,6 +718,17 @@ namespace ACEOMM.UI.ViewModel
         #endregion
 
         #region Filter
+
+        private string _classFilter;
+        public string ClassFilter
+        {
+            get { return _classFilter; }
+            set
+            {
+                SetProperty(ref _classFilter, value);
+                Businesses.Refresh();
+            }
+        }
 
         private string _nameFilter;
         public string NameFilter
